@@ -88,6 +88,7 @@ html, body {
 .bilden {
     position: relative; /* Allow absolutely positioned children to be placed relative to this container */
     display: flex; /* Flexbox to allow dynamic positioning of content */
+    flex-direction: column;
     justify-content: center; /* Center children horizontally */
     align-items: center; /* Center children vertically */
     width: 100%;

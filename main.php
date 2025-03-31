@@ -28,7 +28,6 @@
             <img src="bilder/bildsidan2.png" alt="">
             <div class="bildtext">
                 <p>Welcome to SkySurprise</p>
-                
             </div>
             <div class="bokaknapp">
             <a href="boka-resa.php">Book your flight to "PLACEHOLDER" now</a>
