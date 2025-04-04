@@ -199,6 +199,30 @@ html, body {
 }
 
 
+/* ABOUT US PAGE */
+
+.maincontent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    font-family: 'Lora', serif;
+}
+
+.maincontent h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', cursive;
+}
+
+.h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-family: 'Pacifico', cursive;
+}
+
+
 
 
 
