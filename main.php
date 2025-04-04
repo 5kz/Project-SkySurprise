@@ -26,9 +26,9 @@
     <div class="middlepicture">
         <div class="bilden">
             <img src="bilder/bildsidan2.png" alt="">
-            <div class="bildtext">
-                <p>Welcome to SkySurprise</p>
-            </div>
+                <div class="bildtext">
+                    <p>Welcome to SkySurprise</p>
+                </div>
             <div class="bokaknapp">
             <a href="boka-resa.php">Book your flight to "PLACEHOLDER" now</a>
         </div>
@@ -38,14 +38,13 @@
         <div class="footerinfo">
             <div class="kortinfo">
                 <h2>SkySurprise</h2>
-                <p>PLACEHOLDER SLOGAN<br> 
-                   PLACEHOLDER.</p>
+                <p>Pack your bags. We'll handle rest<br> 
             </div>
             <div class="foretagsinfo">
                 <h3>Contact Us</h3>
                 <p>Email: <a href="mailto:contact@skysurprise.com">contact@skysurprise.com</a></p>
-                <p>Phone: <a href="tel:+46723456789">PLACEHOLDER</a></p>
-                <p>Address: PLACEHOLDER</p>
+                <p>Phone: <a href="tel:+46723456789">+46 723456789</a></p>
+                <p>Address: Mysteriegatan 7, 111 45 Stockholm</p>
             </div>
             <div class="loggafooter">
                 <img src="bilder/skysurpriselogo.png" alt="">
