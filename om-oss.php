@@ -20,6 +20,7 @@
             </div>
         </div>
         <div class="headerright">
+            <a href="main.php">Home</a>
             <a href="logga-in.php">Log in</a>
         </div>
     </div>
@@ -36,9 +37,9 @@
             Whether you're traveling solo, with friends, or surprising someone you love, SkySurprise is here to make your next trip one to remember — even if you don’t know where it is yet. <br>
 
             Dare to fly without a plan? <br>
-            Welcome aboard.</p>
-            <br>
+            Welcome aboard.</p>    
         </div>
+
         <div class="ourvision">
             <h1>Our vision</h1>
             <p>We envision a world where spontaneity leads the way. <br>
@@ -49,6 +50,8 @@
 
             We want to inspire people to let go of control, embrace surprise, and rediscover the magic of travel.</p>
             <br>
+        </div>   
+        <div class="ourhistory">
             <h1>Our history</h1>
             <p>SkySurprise was founded in Stockholm by a small team of travel lovers, adventurers, and dreamers. What started as a fun idea between friends —
                  “what if people booked a flight without knowing the destination?” — 
@@ -62,7 +65,11 @@
         </div>
         <div class="ourteam">
             <h1>Our team</h1>
-
+            <p>Behind every mystery flight is a group of curious minds with a passion for adventure. Our team is made up of travel experts, creatives, logistics ne
+            rds and joy-seekers — all working together with one shared goal: to craft unforgettable experiences where the destination is unknown, but the memories are unforgettable.
+            <br>
+            We love what we do — and it shows in every flight we plan.</p>
+            <img src="bilder/our-team.png" alt="">
         </div>
 
 

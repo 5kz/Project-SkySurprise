@@ -20,6 +20,7 @@
             </div>
         </div>
         <div class="headerright">
+            <a href="main.php">Home</a>
             <a href="logga-in.php">Log in</a>
         </div>
     </div>

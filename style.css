@@ -208,19 +208,35 @@ html, body {
     flex-direction: column;
     padding: 20px;
     font-family: 'Lora', serif;
+    font-weight: bold;
+    color :white;
+    background-image: url('bilder/om-ossbild.jpeg');
+    background-size: cover;
 }
 
 .maincontent h1 {
     font-size: 36px;
     margin-bottom: 20px;
     font-family: 'Poppins', cursive;
+    font-weight: bolder;
 }
 
-.h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    font-family: 'Pacifico', cursive;
+.omoss, .ourvision, .ourteam, .ourhistory {
+    max-width: 800px;
+    width: 100%;
+    text-align: center; 
+    margin-bottom: 40px;
+    background-color: #1C3D5A;
+    border-radius: 15px;
 }
+
+.ourteam img {
+    width: 100%;
+    height: auto;
+    padding:50px;
+    border-radius: 15px;
+}
+
 
 
 
