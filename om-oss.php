@@ -84,7 +84,7 @@
                 <h3>Contact Us</h3>
                 <p>Email: <a href="mailto:contact@skysurprise.com">contact@skysurprise.com</a></p>
                 <p>Phone: <a href="tel:+46723456789">+46 723456789</a></p>
-                <p>Address: Mysteriegatan 7, 111 45 Stockholm</p>
+                <p>Address: <a href="">Mysteriegatan 7, 111 45 Stockholm</a></p>
             </div>
             <div class="loggafooter">
                 <img src="bilder/skysurpriselogo.png" alt="">

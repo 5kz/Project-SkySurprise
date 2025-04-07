@@ -88,8 +88,6 @@ html, body {
 }
 
 /* Main site */
-
-
 .bilden {
     position: relative; 
     display: flex; 
@@ -107,24 +105,30 @@ html, body {
     position: relative;
 }
 
-
 .bokaknapp {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #1C3D5A; 
-    padding: 15 20px;
+    background-color: #4A90E2;
+    padding: 15px 20px;
     border-radius: 5px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); 
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    min-width: 300px; 
+    height: auto; 
+    overflow: hidden; 
+    padding-right: 100px; 
 }
 
-.bokaknapp a{
+.bokaknapp a {
     color: white;
     text-decoration: none;
     font-size: 30px;
-    padding:3rem;
+    padding: 3rem;
     font-family: poppins;
+    display: inline-block;
+    position: relative;
 }
 
 .bildtext{
@@ -135,7 +139,7 @@ html, body {
     padding: 10px 20px;
     border-radius: 5px;
     font-weight: bolder;
-    color: #333333;
+    color: #fff;
     font-size: 65px;
     text-align: center;
     top:50px;
@@ -143,11 +147,39 @@ html, body {
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
 
 }
+.letter {
+    display: inline-block;
+    position: relative;
+    transform: translateZ(25px);
+    transform-origin: 50% 50% 25px;
+}
+
+.letter.out {
+    transform: rotateX(90deg);
+    transition: transform 0.32s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.letter.behind {
+    transform: rotateX(-90deg);
+}
+
+.letter.in {
+    transform: rotateX(0deg);
+    transition: transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+  
+.word {
+    display: inline-block; 
+    position: absolute;
+    opacity: 0;
+    white-space: nowrap; 
+    margin-right: 50px; 
+    color: #1C3D5A;
+}
+
 
 
 /* FOOTER */
-
-
 .footer{
     background-color: #4A90E2;
     color: white;
@@ -242,3 +274,5 @@ html, body {
 
 
 
+
+/*TEST*/
