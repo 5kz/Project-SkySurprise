@@ -16,7 +16,7 @@
         </div>
         <div class="headermiddle">
             <div class="logo">
-                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt=""></a>
+                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt="a"></a>
             </div>
         </div>
         <div class="headerright">
