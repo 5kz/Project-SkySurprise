@@ -1,9 +1,7 @@
 <?php
-session_start(); 
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+    
     $servername = "localhost";
     $username = "root"; 
     $password = "";     
@@ -16,28 +14,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     
+    $firstname = htmlspecialchars($_POST['firstname']);
+    $lastname = htmlspecialchars($_POST['lastname']);
     $email = htmlspecialchars($_POST['email']);
     $password = md5($_POST['password']); 
 
-    
-    $sql = "SELECT * FROM tbluser WHERE email = ? AND password = ?";
+   
+    $sql = "INSERT INTO tbluser (surname, lastname, email, password) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->bind_param("ssss", $firstname, $lastname, $email, $password);
 
-    
-    if ($result->num_rows > 0) {
+    if ($stmt->execute()) {
         
-        $user = $result->fetch_assoc();
-        $_SESSION['user_id'] = $user['id']; 
-        $_SESSION['email'] = $user['email']; 
-        
-        
-        header("Location: dashboard.php");
-        exit(); 
+        header("Location: logga-in.php");
+        exit();
     } else {
-        $error_message = "Invalid email or password!";
+        $error_message = "Error: " . $stmt->error;
     }
 
     $stmt->close();
@@ -50,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SkySurprise</title>
+    <title>Create Account - SkySurprise</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -67,23 +59,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="headerright">
             <a href="main.php">Home</a>
-            <a href="skapa-konto.php">Create Account</a>
+            <a href="logga-in.php">Log in</a>
         </div>
     </div>
 
-    <div class="login-container">
-        <h2>Log In</h2>
-        <form action="logga-in.php" method="post" class="login-form">
+    <div class="register-container">
+        <h2>Create an Account</h2>
+
+        <?php if (!empty($error_message)): ?>
+            <div style="color:red; margin-bottom:10px;">
+                <?= $error_message ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="skapa-konto.php" method="post" class="register-form">
+            <label for="firstname">First Name:</label>
+            <input type="text" id="firstname" name="firstname" required>
+
+            <label for="lastname">Last Name:</label>
+            <input type="text" id="lastname" name="lastname" required>
+
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
 
-            <button type="submit">Log In</button>
-            <p>Don't have an account? <a href="skapa-konto.php">Create one</a></p>
+            <button type="submit">Register</button>
         </form>
-    </div>
 
     <div class="footer">
         <div class="footerinfo">

@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+
+<?php
+session_start();  
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,17 +15,21 @@
 <body>
     <div class="header">
         <div class="headerleft">
-            <a href="support-kontakt.php">Contact and support</a>
+            <a href="dashboard.php">My journey</a>
             <a href="om-oss.php">About us</a>
         </div>
         <div class="headermiddle">
             <div class="logo">
-                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt=""></a>
+                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt="a"></a>
             </div>
         </div>
         <div class="headerright">
             <a href="main.php">Home</a>
-            <a href="logga-in.php">Log in</a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="logga-ut.php">Log Out</a>
+            <?php else: ?>
+                <a href="logga-in.php">Log In</a>
+            <?php endif; ?>
         </div>
     </div>
     <div class="maincontent">
