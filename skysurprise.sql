@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 10 apr 2025 kl 15:16
+-- Tid vid skapande: 11 apr 2025 kl 11:16
 -- Serverversion: 10.4.32-MariaDB
 -- PHP-version: 8.2.12
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Databas: `skysurprise`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `bookinginfo`
+--
+
+CREATE TABLE `bookinginfo` (
+  `id` int(11) NOT NULL,
+  `depature` varchar(50) NOT NULL,
+  `date` date NOT NULL,
+  `destinationtype` varchar(50) NOT NULL,
+  `userid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -49,6 +63,12 @@ INSERT INTO `tbluser` (`id`, `surname`, `lastname`, `email`, `password`, `userle
 --
 
 --
+-- Index för tabell `bookinginfo`
+--
+ALTER TABLE `bookinginfo`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index för tabell `tbluser`
 --
 ALTER TABLE `tbluser`
@@ -57,6 +77,12 @@ ALTER TABLE `tbluser`
 --
 -- AUTO_INCREMENT för dumpade tabeller
 --
+
+--
+-- AUTO_INCREMENT för tabell `bookinginfo`
+--
+ALTER TABLE `bookinginfo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT för tabell `tbluser`
