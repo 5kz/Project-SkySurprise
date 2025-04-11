@@ -1,5 +1,7 @@
 <?php
 
+require_once 'func.php'; 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $servername = "localhost";

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
-<?php
-session_start();  
-?>
+
+<?php require_once 'func.php'; ?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

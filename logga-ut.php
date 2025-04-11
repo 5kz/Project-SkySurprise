@@ -1,4 +1,6 @@
 <?php
+
+require_once 'func.php'; 
 session_start();
 
 session_unset(); 

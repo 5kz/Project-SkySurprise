@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 
-<?php
-require_once('func.php');
-session_start();  
-$your_userid=intval($_SESSION['user_id']);
+<?php require_once 'func.php'; ?>
 
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
-function getFullName($id){
-
-}
-?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
