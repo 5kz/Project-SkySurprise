@@ -47,4 +47,22 @@ function getFullName() {
         return null;
     }
 }
+
+function isAdmin() {
+    if (!isset($_SESSION['user_id'])) {
+        return false;
+    }
+
+    $conn = getDbConnection();
+    $stmt = $conn->prepare("SELECT userlevel FROM tbluser WHERE id = ?");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        return $row['userlevel'] == 9;
+    }
+
+    return false;
+}
 ?>

@@ -1,11 +1,18 @@
 <?php
 require_once 'func.php';
 
+if (isAdmin()) {
+    header("Location: admin-dashboard.php");
+    exit();
+}
+
+ 
 // Redirect if not logged in
 if (!getUserId()) {
     header("Location: logga-in.php");
     exit();
 }
+
 
 $conn = getDbConnection();
 $userId = getUserId();
@@ -40,8 +47,20 @@ $bookings = [];
 while ($row = $result->fetch_assoc()) {
     $bookings[] = $row;
 }
-
 $stmt->close();
+
+// Fetch user's support tickets
+$stmt = $conn->prepare("SELECT title, description, status, created_at FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$ticketsResult = $stmt->get_result();
+
+$tickets = [];
+while ($row = $ticketsResult->fetch_assoc()) {
+    $tickets[] = $row;
+}
+$stmt->close();
+
 $conn->close();
 ?>
 
@@ -82,7 +101,7 @@ $conn->close();
             <table class="booking-table">
                 <thead>
                     <tr>
-                        <th>Departure</th>
+                        <th>Departure from</th>
                         <th>Date</th>
                         <th>Destination</th>
                         <th>Action</th>
@@ -107,6 +126,41 @@ $conn->close();
         <?php else: ?>
             <p>You have no booked flights yet.</p>
         <?php endif; ?>
+
+        <div class="support">
+            <div class="helptitle">
+                <div class="help">
+                    <p>Need assistance?</p>
+                    <a href="support-kontakt.php">Create a ticket</a>
+                </div>
+            </div>
+
+            <h2>My Support Tickets</h2>
+            <?php if (count($tickets) > 0): ?>
+                <table class="support-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($tickets as $ticket): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($ticket['title']) ?></td>
+                                <td><?= htmlspecialchars($ticket['description']) ?></td>
+                                <td><?= htmlspecialchars($ticket['status']) ?></td>
+                                <td><?= htmlspecialchars($ticket['created_at']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>You have not submitted any support tickets yet.</p>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="footer">
