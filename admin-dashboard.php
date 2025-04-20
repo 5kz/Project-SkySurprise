@@ -1,30 +1,116 @@
 <?php
 require_once 'func.php';
 
-// Check if the user is logged in and is an admin
 if (!isAdmin()) {
-    header("Location: dashboard.php"); // Redirect to user dashboard if not an admin
+    header("Location: dashboard.php");
     exit();
 }
 
 $conn = getDbConnection();
 
-// Handle deletion of a user
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
-    $userIdToDelete = intval($_POST['delete_user_id']);
-    
-    // Only delete if the user is not the admin itself
-    if ($userIdToDelete !== getUserId()) {
-        $deleteUser = $conn->prepare("DELETE FROM tbluser WHERE id = ?");
-        $deleteUser->bind_param("i", $userIdToDelete);
-        $deleteUser->execute();
-        $deleteUser->close();
-    }
+// Handle user deletion
+if (isset($_POST['delete_user'])) {
+    $userIdToDelete = intval($_POST['delete_user']);
+    $stmt = $conn->prepare("DELETE FROM tbluser WHERE id = ?");
+    $stmt->bind_param("i", $userIdToDelete);
+    $stmt->execute();
+    $stmt->close();
 }
 
-// Fetch all users from the database
-$usersQuery = "SELECT id, surname, lastname, email, userlevel FROM tbluser";
-$users = $conn->query($usersQuery);
+// Handle booking cancellation
+if (isset($_POST['cancel_booking_id'])) {
+    $bookingId = intval($_POST['cancel_booking_id']);
+    $stmt = $conn->prepare("DELETE FROM bookinginfo WHERE id = ?");
+    $stmt->bind_param("i", $bookingId);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Handle ticket status update
+if (isset($_POST['update_ticket_status'])) {
+    $ticketId = intval($_POST['ticket_id']);
+    $newStatus = $_POST['status'];
+    $stmt = $conn->prepare("UPDATE ticketinfo SET status = ? WHERE id = ?");
+    $stmt->bind_param("si", $newStatus, $ticketId);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: admin-dashboard.php?filter=" . urlencode($_POST['filter']));
+    exit();
+}
+
+// Handle ticket comment
+if (isset($_POST['ticket_comment_submit'])) {
+    $ticketId = intval($_POST['ticket_id']);
+    $message = trim($_POST['message']);
+    $userId = getUserId();
+
+    if (!empty($message)) {
+        $stmt = $conn->prepare("INSERT INTO ticketcomments (ticket_id, user_id, message) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $ticketId, $userId, $message);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    header("Location: admin-dashboard.php?filter=" . urlencode($_POST['filter']));
+    exit();
+}
+
+// Fetch all users
+$users = $conn->query("SELECT id, surname, lastname, email FROM tbluser");
+
+// Fetch all bookings
+$bookingsQuery = "
+    SELECT b.id AS booking_id, b.departure, b.date, b.destinationtype, u.surname, u.lastname 
+    FROM bookinginfo b 
+    JOIN tbluser u ON b.userid = u.id 
+    ORDER BY b.date DESC
+";
+$bookings = $conn->query($bookingsQuery);
+
+// Handle ticket filter
+$filter = $_GET['filter'] ?? 'open';
+$tickets = [];
+
+if ($filter === 'all') {
+    $stmt = $conn->prepare("
+        SELECT t.*, u.surname, u.lastname 
+        FROM ticketinfo t 
+        JOIN tbluser u ON t.user_id = u.id 
+        ORDER BY t.created_at DESC
+    ");
+} else {
+    $stmt = $conn->prepare("
+        SELECT t.*, u.surname, u.lastname 
+        FROM ticketinfo t 
+        JOIN tbluser u ON t.user_id = u.id 
+        WHERE t.status = ?
+        ORDER BY t.created_at DESC
+    ");
+    $stmt->bind_param("s", $filter);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $tickets[] = $row;
+}
+$stmt->close();
+
+// Fetch ticket comments
+$commentsQuery = "
+    SELECT c.*, u.surname, u.lastname 
+    FROM ticketcomments c 
+    JOIN tbluser u ON c.user_id = u.id
+    ORDER BY c.created_at ASC
+";
+$commentsResult = $conn->query($commentsQuery);
+$ticketComments = [];
+
+while ($row = $commentsResult->fetch_assoc()) {
+    $ticketComments[$row['ticket_id']][] = $row;
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -34,13 +120,12 @@ $users = $conn->query($usersQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - SkySurprise</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="header">
         <div class="headerleft">
             <a href="dashboard.php">My journey</a>
-            <a href="om-oss.php">About Us</a>
+            <a href="om-oss.php">About us</a>
         </div>
         <div class="headermiddle">
             <div class="logo">
@@ -49,30 +134,31 @@ $users = $conn->query($usersQuery);
         </div>
         <div class="headerright">
             <a href="main.php">Home</a>
-            <a href="logga-ut.php">Log Out</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="logga-ut.php">Log Out</a>
+            <?php else: ?>
+                <a href="logga-in.php">Log In</a>
+            <?php endif; ?>
         </div>
     </div>
 
     <div class="content">
-        <h2>Manage Users</h2>
-        <table class="admin-table">
+        <h2>Admin Dashboard</h2>
+
+        <h3>All Users</h3>
+        <table class="booking-table">
             <thead>
-                <tr>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>User Level</th>
-                    <th>Actions</th>
-                </tr>
+                <tr><th>Name</th><th>Email</th><th>Action</th></tr>
             </thead>
             <tbody>
                 <?php while ($user = $users->fetch_assoc()): ?>
                     <tr>
-                        <td><?= htmlspecialchars($user['surname']) . ' ' . htmlspecialchars($user['lastname']) ?></td>
+                        <td><?= htmlspecialchars($user['surname'] . ' ' . $user['lastname']) ?></td>
                         <td><?= htmlspecialchars($user['email']) ?></td>
                         <td>
-                            <form method="post" style="display:inline;">
-                                <input type="hidden" name="delete_user_id" value="<?= $user['id'] ?>">
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                            <form method="post">
+                                <input type="hidden" name="delete_user" value="<?= $user['id'] ?>">
+                                <button type="submit">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -80,16 +166,85 @@ $users = $conn->query($usersQuery);
             </tbody>
         </table>
 
-        <h2>Manage Bookings</h2>
-        <!-- Admin can manage flight bookings here (if needed) -->
-        <!-- You can add similar logic to manage, unbook, or delete flight bookings -->
+        <h3>All Bookings</h3>
+        <table class="booking-table">
+            <thead>
+                <tr><th>Name</th><th>From</th><th>To</th><th>Date</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                <?php while ($booking = $bookings->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($booking['surname'] . ' ' . $booking['lastname']) ?></td>
+                        <td><?= htmlspecialchars($booking['departure']) ?></td>
+                        <td><?= htmlspecialchars($booking['destinationtype']) ?></td>
+                        <td><?= htmlspecialchars($booking['date']) ?></td>
+                        <td>
+                            <form method="post">
+                                <input type="hidden" name="cancel_booking_id" value="<?= $booking['booking_id'] ?>">
+                                <button type="submit">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+
+        <h3>Support Tickets</h3>
+        <form method="get">
+            <label for="filter">Filter by status:</label>
+            <select name="filter" onchange="this.form.submit()">
+                <option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>All</option>
+                <option value="open" <?= $filter === 'open' ? 'selected' : '' ?>>Open</option>
+                <option value="ongoing" <?= $filter === 'ongoing' ? 'selected' : '' ?>>Ongoing</option>
+                <option value="closed" <?= $filter === 'closed' ? 'selected' : '' ?>>Closed</option>
+            </select>
+        </form>
+
+        <?php foreach ($tickets as $ticket): ?>
+            <div class="ticket">
+                <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
+                <p><strong>User:</strong> <?= htmlspecialchars($ticket['surname'] . ' ' . $ticket['lastname']) ?> (ID: <?= $ticket['user_id'] ?>)</p>
+                <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($ticket['description'])) ?></p>
+                <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
+
+                <form method="post">
+                    <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
+                    <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
+                    <select name="status">
+                        <option value="open" <?= $ticket['status'] === 'open' ? 'selected' : '' ?>>Open</option>
+                        <option value="ongoing" <?= $ticket['status'] === 'ongoing' ? 'selected' : '' ?>>Ongoing</option>
+                        <option value="closed" <?= $ticket['status'] === 'closed' ? 'selected' : '' ?>>Closed</option>
+                    </select>
+                    <button type="submit" name="update_ticket_status">Update Status</button>
+                </form>
+
+                <h5>Comments:</h5>
+                <?php if (isset($ticketComments[$ticket['id']])): ?>
+                    <ul>
+                        <?php foreach ($ticketComments[$ticket['id']] as $comment): ?>
+                            <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p>No comments yet.</p>
+                <?php endif; ?>
+
+                <form method="post">
+                    <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
+                    <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
+                    <textarea name="message" required placeholder="Reply to this ticket"></textarea>
+                    <button type="submit" name="ticket_comment_submit">Submit Reply</button>
+                </form>
+            </div>
+            <hr>
+        <?php endforeach; ?>
     </div>
 
     <div class="footer">
         <div class="footerinfo">
             <div class="kortinfo">
                 <h2>SkySurprise</h2>
-                <p>Pack your bags. We'll handle the rest</p>
+                <p>Pack your bags. We'll handle rest</p>
             </div>
             <div class="foretagsinfo">
                 <h3>Contact Us</h3>
@@ -98,7 +253,7 @@ $users = $conn->query($usersQuery);
                 <p>Address: <a href="#">Mysteriegatan 7, 111 45 Stockholm</a></p>
             </div>
             <div class="loggafooter">
-                <img src="bilder/skysurpriselogo.png" alt="SkySurprise Logo">
+                <img src="bilder/skysurpriselogo.png" alt="">
             </div>
         </div>
         <div class="botten">
@@ -107,7 +262,3 @@ $users = $conn->query($usersQuery);
     </div>
 </body>
 </html>
-
-<?php
-$conn->close();
-?>

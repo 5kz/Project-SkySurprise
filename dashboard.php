@@ -5,52 +5,58 @@ if (isAdmin()) {
     header("Location: admin-dashboard.php");
     exit();
 }
-
- 
-// Redirect if not logged in
 if (!getUserId()) {
     header("Location: logga-in.php");
     exit();
 }
 
-
 $conn = getDbConnection();
 $userId = getUserId();
 
-// Handle cancellation
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking_id'])) {
-    $bookingId = intval($_POST['cancel_booking_id']);
+// Handle ticket comment submission
+if (isset($_POST['ticket_comment_submit'])) {
+    $ticketId = intval($_POST['ticket_id']);
+    $message = trim($_POST['message']);
 
-    // Delete only if it belongs to the current user
-    $check = $conn->prepare("SELECT id FROM bookinginfo WHERE id = ? AND userid = ?");
-    $check->bind_param("ii", $bookingId, $userId);
-    $check->execute();
-    $result = $check->get_result();
+    // Check if the ticket status is "ongoing" before allowing the user to comment
+    $stmt = $conn->prepare("SELECT status FROM ticketinfo WHERE id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $ticketId, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $ticket = $result->fetch_assoc();
+    $stmt->close();
 
-    if ($result->num_rows > 0) {
-        $delete = $conn->prepare("DELETE FROM bookinginfo WHERE id = ?");
-        $delete->bind_param("i", $bookingId);
-        $delete->execute();
-        $delete->close();
+    if ($ticket && $ticket['status'] === 'ongoing' && !empty($message)) {
+        // Insert the comment into the database if status is "ongoing"
+        $stmt = $conn->prepare("INSERT INTO ticketcomments (ticket_id, user_id, message) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $ticketId, $userId, $message);
+        $stmt->execute();
+        $stmt->close();
     }
 
-    $check->close();
+    // After submitting the comment, redirect to prevent resubmission
+    header("Location: dashboard.php");
+    exit();
 }
 
-// Fetch user's bookings
-$stmt = $conn->prepare("SELECT id, departure, date, destinationtype FROM bookinginfo WHERE userid = ?");
+// Fetch user bookings
+$stmt = $conn->prepare("SELECT b.id AS booking_id, b.departure, b.date, b.destinationtype, u.surname, u.lastname 
+                        FROM bookinginfo b 
+                        JOIN tbluser u ON b.userid = u.id 
+                        WHERE b.userid = ? 
+                        ORDER BY b.date DESC");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
-$result = $stmt->get_result();
+$bookingsResult = $stmt->get_result();
 
 $bookings = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = $bookingsResult->fetch_assoc()) {
     $bookings[] = $row;
 }
 $stmt->close();
 
 // Fetch user's support tickets
-$stmt = $conn->prepare("SELECT title, description, status, created_at FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
+$stmt = $conn->prepare("SELECT id, title, description, status, created_at FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $ticketsResult = $stmt->get_result();
@@ -60,6 +66,21 @@ while ($row = $ticketsResult->fetch_assoc()) {
     $tickets[] = $row;
 }
 $stmt->close();
+
+// Fetch comments for each ticket
+$ticketComments = [];
+foreach ($tickets as $ticket) {
+    $ticketId = $ticket['id'];
+    $stmt = $conn->prepare("SELECT c.*, u.surname, u.lastname FROM ticketcomments c JOIN tbluser u ON c.user_id = u.id WHERE c.ticket_id = ? ORDER BY c.created_at ASC");
+    $stmt->bind_param("i", $ticketId);
+    $stmt->execute();
+    $commentsResult = $stmt->get_result();
+
+    while ($row = $commentsResult->fetch_assoc()) {
+        $ticketComments[$ticketId][] = $row;
+    }
+    $stmt->close();
+}
 
 $conn->close();
 ?>
@@ -71,7 +92,6 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dashboard - SkySurprise</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="header">
@@ -115,7 +135,7 @@ $conn->close();
                             <td><?= htmlspecialchars($booking['destinationtype']) ?></td>
                             <td>
                                 <form method="post">
-                                    <input type="hidden" name="cancel_booking_id" value="<?= $booking['id'] ?>">
+                                    <input type="hidden" name="cancel_booking_id" value="<?= $booking['booking_id'] ?>">
                                     <button type="submit">Cancel</button>
                                 </form>
                             </td>
@@ -137,26 +157,36 @@ $conn->close();
 
             <h2>My Support Tickets</h2>
             <?php if (count($tickets) > 0): ?>
-                <table class="support-table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Created At</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($tickets as $ticket): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($ticket['title']) ?></td>
-                                <td><?= htmlspecialchars($ticket['description']) ?></td>
-                                <td><?= htmlspecialchars($ticket['status']) ?></td>
-                                <td><?= htmlspecialchars($ticket['created_at']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php foreach ($tickets as $ticket): ?>
+                    <div class="ticket">
+                        <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
+                        <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($ticket['description'])) ?></p>
+                        <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
+
+                        <h5>Comments:</h5>
+                        <?php if (isset($ticketComments[$ticket['id']])): ?>
+                            <ul>
+                                <?php foreach ($ticketComments[$ticket['id']] as $comment): ?>
+                                    <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p>No comments yet.</p>
+                        <?php endif; ?>
+
+                        <!-- Only allow commenting if the ticket status is "ongoing" -->
+                        <?php if ($ticket['status'] === 'ongoing'): ?>
+                            <form method="post">
+                                <textarea name="message" required placeholder="Reply to this ticket"></textarea>
+                                <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
+                                <button type="submit" name="ticket_comment_submit">Submit Reply</button>
+                            </form>
+                        <?php else: ?>
+                            <p>You cannot comment on this ticket because it is not in 'Ongoing' status.</p>
+                        <?php endif; ?>
+                    </div>
+                    <hr>
+                <?php endforeach; ?>
             <?php else: ?>
                 <p>You have not submitted any support tickets yet.</p>
             <?php endif; ?>
