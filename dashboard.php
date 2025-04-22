@@ -55,8 +55,10 @@ while ($row = $bookingsResult->fetch_assoc()) {
 }
 $stmt->close();
 
+$viewTicketId = isset($_GET['ticket']) ? intval($_GET['ticket']) : null;
+
 // Fetch user's support tickets
-$stmt = $conn->prepare("SELECT id, title, description, status, created_at FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
+$stmt = $conn->prepare("SELECT id, title, description, status, created_at, image FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $ticketsResult = $stmt->get_result();
@@ -157,36 +159,69 @@ $conn->close();
 
             <h2>My Support Tickets</h2>
             <?php if (count($tickets) > 0): ?>
-                <?php foreach ($tickets as $ticket): ?>
-                    <div class="ticket">
-                        <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
-                        <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($ticket['description'])) ?></p>
-                        <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
+                <?php if ($viewTicketId): ?>
+                    <?php
+                    // Find the specific ticket
+                    $selectedTicket = null;
+                    foreach ($tickets as $t) {
+                        if ($t['id'] == $viewTicketId) {
+                            $selectedTicket = $t;
+                            break;
+                        }
+                    }
+                    ?>
 
-                        <h5>Comments:</h5>
-                        <?php if (isset($ticketComments[$ticket['id']])): ?>
-                            <ul>
-                                <?php foreach ($ticketComments[$ticket['id']] as $comment): ?>
-                                    <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php else: ?>
-                            <p>No comments yet.</p>
-                        <?php endif; ?>
+                    <?php if ($selectedTicket): ?>
+                        <div class="ticket">
+                            <h4>Ticket #<?= $selectedTicket['id'] ?> - <?= htmlspecialchars($selectedTicket['title']) ?></h4>
+                            <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($selectedTicket['description'])) ?></p>
+                            <p><strong>Status:</strong> <?= htmlspecialchars($selectedTicket['status']) ?> | <strong>Created:</strong> <?= $selectedTicket['created_at'] ?></p>
 
-                        <!-- Only allow commenting if the ticket status is "ongoing" -->
-                        <?php if ($ticket['status'] === 'ongoing'): ?>
-                            <form method="post">
-                                <textarea name="message" required placeholder="Reply to this ticket"></textarea>
-                                <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
-                                <button type="submit" name="ticket_comment_submit">Submit Reply</button>
-                            </form>
-                        <?php else: ?>
-                            <p>You cannot comment on this ticket because it is not in 'Ongoing' status.</p>
-                        <?php endif; ?>
-                    </div>
-                    <hr>
-                <?php endforeach; ?>
+                            <h5>Comments:</h5>
+                            <?php if (isset($ticketComments[$selectedTicket['id']])): ?>
+                                <ul>
+                                    <?php foreach ($ticketComments[$selectedTicket['id']] as $comment): ?>
+                                        <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else: ?>
+                                <p>No comments yet.</p>
+                            <?php endif; ?>
+
+                            <?php if ($selectedTicket['status'] === 'ongoing'): ?>
+                                <form method="post">
+                                    <textarea name="message" required placeholder="Reply to this ticket"></textarea>
+                                    <input type="hidden" name="ticket_id" value="<?= $selectedTicket['id'] ?>">
+                                    <button type="submit" name="ticket_comment_submit">Submit Reply</button>
+                                </form>
+                            <?php else: ?>
+                                <p>You cannot comment on this ticket because it is not in 'Ongoing' status.</p>
+                            <?php endif; ?>
+
+                            <?php if (!empty($selectedTicket['image'])): ?>
+                                <p><strong>Attached File:</strong><br>
+                                    <a href="uploads/<?= htmlspecialchars($selectedTicket['image']) ?>" download>
+                                        <?= htmlspecialchars($selectedTicket['image']) ?>
+                                    </a>
+                                </p>
+                            <?php endif; ?>
+
+                            <p><a href="dashboard.php" class="back-button">← Back to tickets</a></p>
+                        </div>
+                    <?php else: ?>
+                        <p>Ticket not found or you do not have access.</p>
+                        <p><a href="dashboard.php">← Back to tickets</a></p>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php foreach ($tickets as $ticket): ?>
+                        <div class="ticket">
+                            <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
+                            <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
+                            <a href="dashboard.php?ticket=<?= $ticket['id'] ?>">View</a>
+                        </div>
+                        <hr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             <?php else: ?>
                 <p>You have not submitted any support tickets yet.</p>
             <?php endif; ?>

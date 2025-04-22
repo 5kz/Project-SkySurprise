@@ -58,6 +58,9 @@ if (isset($_POST['ticket_comment_submit'])) {
 // Fetch all users
 $users = $conn->query("SELECT id, surname, lastname, email FROM tbluser");
 
+
+$viewTicketId = isset($_GET['ticket']) ? intval($_GET['ticket']) : null;
+
 // Fetch all bookings
 $bookingsQuery = "
     SELECT b.id AS booking_id, b.departure, b.date, b.destinationtype, u.surname, u.lastname 
@@ -199,45 +202,58 @@ $conn->close();
                 <option value="closed" <?= $filter === 'closed' ? 'selected' : '' ?>>Closed</option>
             </select>
         </form>
-
         <?php foreach ($tickets as $ticket): ?>
-            <div class="ticket">
-                <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
-                <p><strong>User:</strong> <?= htmlspecialchars($ticket['surname'] . ' ' . $ticket['lastname']) ?> (ID: <?= $ticket['user_id'] ?>)</p>
-                <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($ticket['description'])) ?></p>
-                <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
+    <?php $isExpanded = ($viewTicketId === intval($ticket['id'])); ?>
+    <div class="ticket">
+        <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
+        <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
+        <p><strong>User:</strong> <?= htmlspecialchars($ticket['surname'] . ' ' . $ticket['lastname']) ?> (ID: <?= $ticket['user_id'] ?>)</p>
 
-                <form method="post">
-                    <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
-                    <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
-                    <select name="status">
-                        <option value="open" <?= $ticket['status'] === 'open' ? 'selected' : '' ?>>Open</option>
-                        <option value="ongoing" <?= $ticket['status'] === 'ongoing' ? 'selected' : '' ?>>Ongoing</option>
-                        <option value="closed" <?= $ticket['status'] === 'closed' ? 'selected' : '' ?>>Closed</option>
-                    </select>
-                    <button type="submit" name="update_ticket_status">Update Status</button>
-                </form>
+        <?php if (!$isExpanded): ?>
+            <a href="admin-dashboard.php?filter=<?= urlencode($filter) ?>&ticket=<?= $ticket['id'] ?>">View</a>
+        <?php else: ?>
+            <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($ticket['description'])) ?></p>
+            <p><strong>Attached File:</strong><br>
+        <a href="uploads/<?= htmlspecialchars($ticket['image']) ?>" download>
+            <?= htmlspecialchars($ticket['image']) ?>
+        </a>
+    </p>
 
-                <h5>Comments:</h5>
-                <?php if (isset($ticketComments[$ticket['id']])): ?>
-                    <ul>
-                        <?php foreach ($ticketComments[$ticket['id']] as $comment): ?>
-                            <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <p>No comments yet.</p>
-                <?php endif; ?>
+            <form method="post">
+                <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
+                <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
+                <select name="status">
+                    <option value="open" <?= $ticket['status'] === 'open' ? 'selected' : '' ?>>Open</option>
+                    <option value="ongoing" <?= $ticket['status'] === 'ongoing' ? 'selected' : '' ?>>Ongoing</option>
+                    <option value="closed" <?= $ticket['status'] === 'closed' ? 'selected' : '' ?>>Closed</option>
+                </select>
+                <button type="submit" name="update_ticket_status">Update Status</button>
+            </form>
 
-                <form method="post">
-                    <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
-                    <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
-                    <textarea name="message" required placeholder="Reply to this ticket"></textarea>
-                    <button type="submit" name="ticket_comment_submit">Submit Reply</button>
-                </form>
-            </div>
-            <hr>
-        <?php endforeach; ?>
+            <h5>Comments:</h5>
+            <?php if (isset($ticketComments[$ticket['id']])): ?>
+                <ul>
+                    <?php foreach ($ticketComments[$ticket['id']] as $comment): ?>
+                        <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>No comments yet.</p>
+            <?php endif; ?>
+
+            <form method="post">
+                <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
+                <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
+                <textarea name="message" required placeholder="Reply to this ticket"></textarea>
+                <button type="submit" name="ticket_comment_submit">Submit Reply</button>
+            </form>
+
+            <!-- Back Button -->
+            <p><a href="admin-dashboard.php?filter=<?= urlencode($filter) ?>" class="back-button">← Back to tickets</a></p>
+        <?php endif; ?>
+    </div>
+    <hr>
+<?php endforeach; ?>
     </div>
 
     <div class="footer">

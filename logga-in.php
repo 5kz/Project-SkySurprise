@@ -1,40 +1,25 @@
 <?php
- require_once 'func.php'; 
+require_once 'func.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$error_message = "";
 
-    $servername = "localhost";
-    $username = "root"; 
-    $password = "";     
-    $dbname = "skysurprise";
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $conn = getDbConnection(); // Use your existing function
 
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    
     $email = htmlspecialchars($_POST['email']);
-    $password = md5($_POST['password']); 
+    $password = md5($_POST['password']); // Still using md5 for now
 
-    
-    $sql = "SELECT * FROM tbluser WHERE email = ? AND password = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("SELECT * FROM tbluser WHERE email = ? AND password = ?");
     $stmt->bind_param("ss", $email, $password);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    
-    if ($result->num_rows > 0) {
-        
+    if ($result && $result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        $_SESSION['user_id'] = $user['id']; 
-        $_SESSION['email'] = $user['email']; 
-        
-        
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['email'] = $user['email'];
         header("Location: dashboard.php");
-        exit(); 
+        exit();
     } else {
         $error_message = "Invalid email or password!";
     }
@@ -51,7 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SkySurprise</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="header">
@@ -61,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="headermiddle">
             <div class="logo">
-                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt=""></a>
+                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt="Logo"></a>
             </div>
         </div>
         <div class="headerright">
@@ -72,6 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="login-container">
         <h2>Log In</h2>
+
+        <?php if (!empty($error_message)): ?>
+            <p class="error-message"><?php echo $error_message; ?></p>
+        <?php endif; ?>
+
         <form action="logga-in.php" method="post" class="login-form">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
@@ -88,13 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="footerinfo">
             <div class="kortinfo">
                 <h2>SkySurprise</h2>
-                <p>Pack your bags. We'll handle rest<br> 
+                <p>Pack your bags. We'll handle rest</p> 
             </div>
             <div class="foretagsinfo">
                 <h3>Contact Us</h3>
                 <p>Email: <a href="mailto:contact@skysurprise.com">contact@skysurprise.com</a></p>
                 <p>Phone: <a href="tel:+46723456789">+46 723456789</a></p>
-                <p>Address: <a href="">Mysteriegatan 7, 111 45 Stockholm</a></p>
+                <p>Address: Mysteriegatan 7, 111 45 Stockholm</p>
             </div>
             <div class="loggafooter">
                 <img src="bilder/skysurpriselogo.png" alt="">

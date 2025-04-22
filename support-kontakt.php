@@ -17,10 +17,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $userId = getUserId();
     $title = trim($_POST["title"]);
     $description = trim($_POST["description"]);
+    $image = null;
+
+    // Handle image upload
+    if (isset($_FILES["image"]) && $_FILES["image"]["error"] === UPLOAD_ERR_OK) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileType = $_FILES["image"]["type"];
+        $fileTmpName = $_FILES["image"]["tmp_name"];
+        $fileName = basename($_FILES["image"]["name"]);
+
+        if (in_array($fileType, $allowedTypes)) {
+            $uploadDir = "uploads/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $targetPath = $uploadDir . time() . "_" . $fileName;
+            if (move_uploaded_file($fileTmpName, $targetPath)) {
+                $image = $targetPath;
+            }
+        }
+    }
 
     if (!empty($title) && !empty($description)) {
-        $stmt = $conn->prepare("INSERT INTO ticketinfo (user_id, title, description, status) VALUES (?, ?, ?, 'open')");
-        $stmt->bind_param("iss", $userId, $title, $description);
+        $stmt = $conn->prepare("INSERT INTO ticketinfo (user_id, title, description, image, status) VALUES (?, ?, ?, ?, 'open')");
+        $stmt->bind_param("isss", $userId, $title, $description, $image);
 
         if ($stmt->execute()) {
             $success = true;
@@ -74,12 +94,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <p class="error">There was a problem submitting your ticket. Make sure all fields are filled in.</p>
     <?php endif; ?>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title" maxlength="60" required><br><br>
 
         <label for="description">Description:</label><br>
         <textarea id="description" name="description" rows="6" required></textarea><br><br>
+
+        <label for="image">Attach Image (optional):</label><br>
+        <input type="file" name="image" id="image" accept="image/*"><br><br>
 
         <button type="submit">Submit Ticket</button>
     </form>
