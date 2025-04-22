@@ -53,26 +53,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <a href="skapa-konto.php">Create Account</a>
         </div>
     </div>
+    <div class="backgroundimglogin">
+        <div class="login-container">
+            <h2>Log In</h2>
 
-    <div class="login-container">
-        <h2>Log In</h2>
+            <?php if (!empty($error_message)): ?>
+                <p class="error-message"><?php echo $error_message; ?></p>
+            <?php endif; ?>
 
-        <?php if (!empty($error_message)): ?>
-            <p class="error-message"><?php echo $error_message; ?></p>
-        <?php endif; ?>
+            <form action="logga-in.php" method="post" class="login-form">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
 
-        <form action="logga-in.php" method="post" class="login-form">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Log In</button>
-            <p>Don't have an account? <a href="skapa-konto.php">Create one</a></p>
-        </form>
+                <button type="submit">Log In</button>
+                <p>Don't have an account? <a href="skapa-konto.php">Create one</a></p>
+            </form>
+        </div>
     </div>
-
     <div class="footer">
         <div class="footerinfo">
             <div class="kortinfo">

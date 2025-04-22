@@ -303,6 +303,7 @@ html, body {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     font-family: 'Poppins', sans-serif;
+    width: 100%;
 }
 
 .login-container h2 {
@@ -317,6 +318,7 @@ html, body {
     width: 100%;
     display: flex;
     flex-direction: column;
+
 }
 
 .login-form label {
@@ -373,4 +375,14 @@ html, body {
     margin-bottom: 1rem;
     font-weight: 600;
     text-align: center;
+}
+
+.backgroundimglogin{
+    background-image: url('bilder/loggainbakgrund.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
