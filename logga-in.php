@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="header">
         <div class="headerleft">
-            <a href="support-kontakt.php">Contact and support</a>
+            <a href="dashboard.php">My journey</a>
             <a href="om-oss.php">About us</a>
         </div>
         <div class="headermiddle">

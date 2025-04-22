@@ -255,38 +255,56 @@ html, body {
 
 .maincontent {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    padding: 20px;
-    font-family: 'Lora', serif;
-    font-weight: bold;
-    color :white;
+    align-items: center;
+    padding: 2rem 1rem;
+    font-family: 'Poppins', sans-serif;
     background-image: url('bilder/om-ossbild.jpeg');
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    min-height: 100vh;
+    backdrop-filter: brightness(0.9);
 }
 
 .maincontent h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    font-family: 'Poppins', cursive;
-    font-weight: bolder;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    text-align: center;
+    color: white;
 }
 
 .omoss, .ourvision, .ourteam, .ourhistory {
-    max-width: 800px;
+    background-color: rgba(74, 144, 226, 0.9);
+    max-width: 700px;
     width: 100%;
-    text-align: center; 
-    margin-bottom: 40px;
-    background-color: #4A90E2;
-    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.omoss h2, .ourvision h2, .ourteam h2, .ourhistory h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.omoss p, .ourvision p, .ourhistory p {
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+    color: #f0f0f0;
 }
 
 .ourteam img {
     width: 100%;
     height: auto;
-    padding:50px;
-    border-radius: 15px;
+    border-radius: 10px;
+    margin-top: 1rem;
 }
 
 
@@ -379,6 +397,90 @@ html, body {
 
 .backgroundimglogin{
     background-image: url('bilder/loggainbakgrund.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CREATE ACCOUNT */
+
+.register-container {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 10px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    margin: 3rem auto;
+}
+
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form label {
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+    color: #444;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-form input {
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-form input:focus {
+    outline: none;
+    border-color: #4A90E2;
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
+}
+
+.register-form button {
+    background-color: #4A90E2;
+    color: white;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-form button:hover {
+    background-color: #357ABD;
+}
+
+.error-message {
+    color: red;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.registerbackgroundimg{
+    background-image: url('bilder/skapakonto.jpg');
     background-size: cover;
     background-position: center;
     height: 100vh;

@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="header">
         <div class="headerleft">
-            <a href="support-kontakt.php">Contact and support</a>
+            <a href="dashboard.php">My journey</a>
             <a href="om-oss.php">About us</a>
         </div>
         <div class="headermiddle">
@@ -64,32 +64,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="logga-in.php">Log in</a>
         </div>
     </div>
+    <div class="registerbackgroundimg">
+        <div class="register-container">
+            <h2>Create an Account</h2>
 
-    <div class="register-container">
-        <h2>Create an Account</h2>
+            <?php if (!empty($error_message)): ?>
+                <div style="color:red; margin-bottom:10px;">
+                    <?= $error_message ?>
+                </div>
+            <?php endif; ?>
 
-        <?php if (!empty($error_message)): ?>
-            <div style="color:red; margin-bottom:10px;">
-                <?= $error_message ?>
-            </div>
-        <?php endif; ?>
+            <form action="skapa-konto.php" method="post" class="register-form">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname" required>
 
-        <form action="skapa-konto.php" method="post" class="register-form">
-            <label for="firstname">First Name:</label>
-            <input type="text" id="firstname" name="firstname" required>
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname" required>
 
-            <label for="lastname">Last Name:</label>
-            <input type="text" id="lastname" name="lastname" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Register</button>
-        </form>
-
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
     <div class="footer">
         <div class="footerinfo">
             <div class="kortinfo">
