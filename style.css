@@ -407,24 +407,36 @@ html, body {
 
 /* CREATE ACCOUNT */
 
-.register-container {
-    background-color: #ffffff;
-    padding: 2.5rem;
-    border-radius: 10px;
-    max-width: 450px;
+.registerbackgroundimg {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 120px; /* space for header */
+    padding-bottom: 100px; /* space for footer */
+    background-image: url('bilder/skapakonto.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     width: 100%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.register-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     font-family: 'Poppins', sans-serif;
-    margin: 3rem auto;
 }
 
 .register-container h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
     text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.8rem;
-    color: #333;
-    font-weight: 700;
-    font-family: 'Poppins', sans-serif;
+    color: #4A90E2;
 }
 
 .register-form {
@@ -433,38 +445,28 @@ html, body {
 }
 
 .register-form label {
-    margin-bottom: 0.4rem;
     font-weight: 500;
-    color: #444;
-    font-family: 'Poppins', sans-serif;
+    margin-bottom: 0.3rem;
+    color: #333;
 }
 
 .register-form input {
-    padding: 0.8rem;
-    margin-bottom: 1.2rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-}
-
-.register-form input:focus {
-    outline: none;
-    border-color: #4A90E2;
-    box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
 }
 
 .register-form button {
     background-color: #4A90E2;
     color: white;
-    padding: 0.9rem;
+    padding: 0.75rem;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    font-family: 'Poppins', sans-serif;
+    transition: background 0.3s ease;
 }
 
 .register-form button:hover {
@@ -476,15 +478,184 @@ html, body {
     font-weight: 600;
     text-align: center;
     margin-bottom: 1rem;
+}
+
+
+/* SUPPORT PAGE */ 
+
+.kontakt-formcontainer {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif; /* Use Poppins for the form */
+}
+
+.kontakt-formcontainer h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    color: #333;
+    font-family: 'Poppins', sans-serif; /* Use Poppins for the title */
+}
+
+.kontakt-formcontainer form {
+    display: flex;
+    flex-direction: column;
+}
+
+.kontakt-formcontainer label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-family: 'Poppins', sans-serif; /* Use Poppins for labels */
+}
+
+.kontakt-formcontainer input,
+.kontakt-formcontainer textarea {
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    font-family: 'Poppins', sans-serif; /* Use Poppins for inputs and textarea */
+}
+
+.kontakt-formcontainer input[type="file"] {
+    padding: 0.6rem;
+}
+
+.kontakt-formcontainer textarea {
+    resize: vertical;
+}
+
+.kontakt-formcontainer button[type="submit"] {
+    background-color: #4A90E2;
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.3s ease;
+    font-family: 'Poppins', sans-serif; /* Use Poppins for button */
+}
+
+.kontakt-formcontainer button[type="submit"]:hover {
+    background-color: #357ABD;
+}
+
+/* SUCCESS / ERROR MESSAGES */
+.success, .error {
+    text-align: center;
+    font-weight: bold;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif; /* Use Poppins for success/error messages */
+}
+
+.success {
+    background-color: #DFF0D8;
+    color: #3C763D;
+}
+
+.error {
+    background-color: #F2DEDE;
+    color: #A94442;
+}
+
+
+/* BOOKING PAGE */
+.booking-content {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     font-family: 'Poppins', sans-serif;
 }
 
-.registerbackgroundimg{
-    background-image: url('bilder/skapakonto.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
+.booking-heading {
+    font-size: 2rem;
+    text-align: center;
+    color: #4A90E2;
+    margin-bottom: 30px;
+}
+
+.booking-message {
+    padding: 16px 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.booking-message-success {
+    background-color: #DFF0D8;
+    color: #3C763D;
+    border: 1px solid #C8E6C9;
+}
+
+.booking-message-error {
+    background-color: #F2DEDE;
+    color: #A94442;
+    border: 1px solid #E0B4B4;
+}
+
+.booking-form {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.booking-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-form-group label {
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.booking-form-group select,
+.booking-form-group input {
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fdfdfd;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.booking-form-group select:focus,
+.booking-form-group input:focus {
+    outline: none;
+    border-color: #4A90E2;
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
+}
+
+.booking-submit-button {
+    background-color: #4A90E2;
+    color: white;
+    padding: 14px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.booking-submit-button:hover {
+    background-color: #357ABD;
 }

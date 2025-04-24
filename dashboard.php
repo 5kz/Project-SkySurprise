@@ -13,6 +13,17 @@ if (!getUserId()) {
 $conn = getDbConnection();
 $userId = getUserId();
 
+// Handle booking cancelation
+if (isset($_POST['cancel_booking_id'])) {
+    $cancelId = intval($_POST['cancel_booking_id']);
+    $stmt = $conn->prepare("DELETE FROM bookinginfo WHERE id = ? AND userid = ?");
+    $stmt->bind_param("ii", $cancelId, $userId);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: dashboard.php");
+    exit();
+}
+
 // Handle ticket comment submission
 if (isset($_POST['ticket_comment_submit'])) {
     $ticketId = intval($_POST['ticket_id']);
@@ -34,7 +45,6 @@ if (isset($_POST['ticket_comment_submit'])) {
         $stmt->close();
     }
 
-    // After submitting the comment, redirect to prevent resubmission
     header("Location: dashboard.php");
     exit();
 }
@@ -136,7 +146,7 @@ $conn->close();
                             <td><?= htmlspecialchars($booking['date']) ?></td>
                             <td><?= htmlspecialchars($booking['destinationtype']) ?></td>
                             <td>
-                                <form method="post">
+                                <form method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
                                     <input type="hidden" name="cancel_booking_id" value="<?= $booking['booking_id'] ?>">
                                     <button type="submit">Cancel</button>
                                 </form>
@@ -161,7 +171,6 @@ $conn->close();
             <?php if (count($tickets) > 0): ?>
                 <?php if ($viewTicketId): ?>
                     <?php
-                    // Find the specific ticket
                     $selectedTicket = null;
                     foreach ($tickets as $t) {
                         if ($t['id'] == $viewTicketId) {
