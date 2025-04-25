@@ -45,8 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - SkySurprise</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css?v=<?php echo filemtime('style.css'); ?>">
 </head>
 <body>
     <div class="header">

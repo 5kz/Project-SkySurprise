@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 22 apr 2025 kl 22:47
+-- Tid vid skapande: 25 apr 2025 kl 13:05
 -- Serverversion: 10.4.32-MariaDB
 -- PHP-version: 8.2.12
 
@@ -40,10 +40,8 @@ CREATE TABLE `bookinginfo` (
 --
 
 INSERT INTO `bookinginfo` (`id`, `departure`, `date`, `destinationtype`, `userid`) VALUES
-(7, 'Göteborg Landvetter (GOT)', '2025-05-02', 'Surprise me', 10),
-(8, 'Stockholm Arlanda (ARN)', '2025-05-03', 'Nature & adventure', 12),
-(9, 'Stockholm Arlanda (ARN)', '2025-04-18', 'Nature & adventure', 10),
-(10, 'Copenhagen Kastrup (CPH)', '2025-05-03', 'City escape', 10);
+(15, 'Stockholm Arlanda (ARN)', '2025-06-18', 'Surprise me', 13),
+(16, 'Oslo Gardermoen (OSL)', '2025-05-10', 'Nature & adventure', 12);
 
 -- --------------------------------------------------------
 
@@ -67,7 +65,9 @@ CREATE TABLE `tbluser` (
 INSERT INTO `tbluser` (`id`, `surname`, `lastname`, `email`, `password`, `userlevel`) VALUES
 (10, 'Steffe', 'Storm', 'ss@gmail.com', '202cb962ac59075b964b07152d234b70', 1),
 (11, 'Skysurprise', 'Support team', 'admin@skysurprise.com', '202cb962ac59075b964b07152d234b70', 9),
-(12, 'Lasse', 'Flerre', 'lf@gmail.com', '202cb962ac59075b964b07152d234b70', 1);
+(12, 'Lasse', 'Flerre', 'lf@gmail.com', '202cb962ac59075b964b07152d234b70', 1),
+(13, 'Elton', 'Tagner', 'eltontagner2@gmail.com', 'e48e13207341b6bffb7fb1622282247b', 1),
+(14, 'Alexander', 'Nord', 'an@gmail.com', '202cb962ac59075b964b07152d234b70', 1);
 
 -- --------------------------------------------------------
 
@@ -114,7 +114,12 @@ INSERT INTO `ticketcomments` (`id`, `ticket_id`, `user_id`, `message`, `created_
 (24, 5, 12, 'Tack', '2025-04-19 20:15:29'),
 (25, 6, 11, 'Hej', '2025-04-22 14:32:57'),
 (26, 7, 11, 'Det ska nog vara lungt fixat nu?', '2025-04-22 14:57:27'),
-(27, 7, 12, 'Ja perfect', '2025-04-22 14:57:48');
+(27, 7, 12, 'Ja perfect', '2025-04-22 14:57:48'),
+(28, 10, 11, 'Testa dig', '2025-04-24 11:20:39'),
+(29, 12, 11, 'YEA LÖS you dont know', '2025-04-25 08:28:12'),
+(30, 12, 13, 'Mabye', '2025-04-25 08:28:39'),
+(31, 13, 11, 'YEA NO', '2025-04-25 10:45:27'),
+(32, 13, 14, 'FUCK YOU SUPPORT', '2025-04-25 10:45:49');
 
 -- --------------------------------------------------------
 
@@ -144,8 +149,11 @@ INSERT INTO `ticketinfo` (`id`, `user_id`, `title`, `description`, `image`, `sta
 (5, 12, 'Trasig', '12312412414', NULL, 'closed', '2025-04-19 20:15:44'),
 (6, 10, 'Hej hej', '12312312313', NULL, 'closed', '2025-04-22 15:00:05'),
 (7, 12, 'Hej hjälp tack', 'Testare testman', NULL, 'closed', '2025-04-22 14:58:10'),
-(8, 12, 'Img test', 'Test', 'uploads/1745335284_Screenshot 2023-11-14 163851.png', 'open', '2025-04-22 15:21:24'),
-(9, 12, 'img2', 'igm', 'uploads/1745336900_Screenshot 2023-11-19 224635.png', 'open', '2025-04-22 15:48:20');
+(8, 12, 'Img test', 'Test', 'uploads/1745335284_Screenshot 2023-11-14 163851.png', 'closed', '2025-04-24 11:19:49'),
+(9, 12, 'img2', 'igm', 'uploads/1745336900_Screenshot 2023-11-19 224635.png', 'closed', '2025-04-24 11:20:22'),
+(11, 12, 'Testare 23', 'Test01239129', 'uploads/1745483785_Plamnritning över Olles AB - OllesAB_planritning.png', 'closed', '2025-04-24 11:19:25'),
+(12, 13, 'help', 'where am going', 'uploads/1745569632_Plamnritning över Olles AB - OllesAB_planritning.png', 'closed', '2025-04-25 08:29:03'),
+(13, 14, 'HELLO HELP', 'HELP PLAEASE', NULL, 'closed', '2025-04-25 10:46:10');
 
 --
 -- Index för dumpade tabeller
@@ -183,25 +191,25 @@ ALTER TABLE `ticketinfo`
 -- AUTO_INCREMENT för tabell `bookinginfo`
 --
 ALTER TABLE `bookinginfo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT för tabell `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT för tabell `ticketcomments`
 --
 ALTER TABLE `ticketcomments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT för tabell `ticketinfo`
 --
 ALTER TABLE `ticketinfo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

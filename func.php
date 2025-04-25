@@ -1,14 +1,14 @@
 <?php
-// Start session (only if not already started)
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Database connection function
+
 function getDbConnection() {
     $servername = "localhost";
-    $username = "root"; // Update this if needed
-    $password = "";     // Update this if needed
+    $username = "root"; 
+    $password = "";     
     $dbname = "skysurprise";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -19,12 +19,12 @@ function getDbConnection() {
     return $conn;
 }
 
-// Get current logged-in user ID
+
 function getUserId() {
     return $_SESSION['user_id'] ?? null;
 }
 
-// Get full name of the current user
+
 function getFullName() {
     $userId = getUserId();
 

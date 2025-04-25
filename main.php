@@ -5,9 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <title>Home - SkySurprise</title>
+    <link rel="stylesheet" href="style.css?v=<?php echo filemtime('style.css'); ?>">t>
     
 </head>
 <body>
@@ -41,9 +40,10 @@
                     <div>Book your flight to&nbsp;
                         <span class="word">New York</span>
                         <span class="word">Tokyo</span>
-                        <span class="word">London</span>
-                        <span class="word">Berlin</span>
-                        <span class="word">Rome</span>
+                        <span class="word">Dubai</span>
+                        <span class="word">Turkey</span>
+                        <span class="word">Albania</span>
+                        <span class="word">Paris</span>
                         <span class="word">????</span>
                     </div>
                 </a>

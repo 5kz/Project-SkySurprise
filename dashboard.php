@@ -13,7 +13,7 @@ if (!getUserId()) {
 $conn = getDbConnection();
 $userId = getUserId();
 
-// Handle booking cancelation
+
 if (isset($_POST['cancel_booking_id'])) {
     $cancelId = intval($_POST['cancel_booking_id']);
     $stmt = $conn->prepare("DELETE FROM bookinginfo WHERE id = ? AND userid = ?");
@@ -24,12 +24,11 @@ if (isset($_POST['cancel_booking_id'])) {
     exit();
 }
 
-// Handle ticket comment submission
+
 if (isset($_POST['ticket_comment_submit'])) {
     $ticketId = intval($_POST['ticket_id']);
     $message = trim($_POST['message']);
 
-    // Check if the ticket status is "ongoing" before allowing the user to comment
     $stmt = $conn->prepare("SELECT status FROM ticketinfo WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $ticketId, $userId);
     $stmt->execute();
@@ -38,7 +37,6 @@ if (isset($_POST['ticket_comment_submit'])) {
     $stmt->close();
 
     if ($ticket && $ticket['status'] === 'ongoing' && !empty($message)) {
-        // Insert the comment into the database if status is "ongoing"
         $stmt = $conn->prepare("INSERT INTO ticketcomments (ticket_id, user_id, message) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $ticketId, $userId, $message);
         $stmt->execute();
@@ -49,7 +47,7 @@ if (isset($_POST['ticket_comment_submit'])) {
     exit();
 }
 
-// Fetch user bookings
+
 $stmt = $conn->prepare("SELECT b.id AS booking_id, b.departure, b.date, b.destinationtype, u.surname, u.lastname 
                         FROM bookinginfo b 
                         JOIN tbluser u ON b.userid = u.id 
@@ -65,9 +63,33 @@ while ($row = $bookingsResult->fetch_assoc()) {
 }
 $stmt->close();
 
+
+$daysLeftMessage = 'No upcoming flights. <br> <a href="boka-resa.php">Book one now!</a>';
+$now = new DateTime();
+
+$soonest = null;
+foreach ($bookings as $booking) {
+    $flightDate = new DateTime($booking['date']);
+    if ($flightDate >= $now && (!$soonest || $flightDate < $soonest)) {
+        $soonest = $flightDate;
+    }
+}
+
+if ($soonest) {
+    $interval = $now->diff($soonest);
+    $daysLeft = $interval->format('%a');
+
+    if ($daysLeft == 0) {
+        $daysLeftMessage = "Your next flight is <strong>today</strong>!";
+    } 
+    else {
+        $daysLeftMessage = "<strong>$daysLeft days</strong> left until your adventure!";
+    }
+}
+
 $viewTicketId = isset($_GET['ticket']) ? intval($_GET['ticket']) : null;
 
-// Fetch user's support tickets
+
 $stmt = $conn->prepare("SELECT id, title, description, status, created_at, image FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
@@ -79,7 +101,7 @@ while ($row = $ticketsResult->fetch_assoc()) {
 }
 $stmt->close();
 
-// Fetch comments for each ticket
+
 $ticketComments = [];
 foreach ($tickets as $ticket) {
     $ticketId = $ticket['id'];
@@ -102,10 +124,11 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Dashboard - SkySurprise</title>
-    <link rel="stylesheet" href="style.css">
+    <title>User Dashboard - SkySurprise</title>
+    <link rel="stylesheet" href="style.css?v=<?php echo filemtime('style.css'); ?>">
 </head>
 <body>
+    
     <div class="header">
         <div class="headerleft">
             <a href="dashboard.php">My journey</a>
@@ -126,48 +149,58 @@ $conn->close();
         </div>
     </div>
 
-    <div class="content">
-        <h2>My Bookings</h2>
+    
+    <div class="countdown-box">
+        <h3><?= $daysLeftMessage ?></h3>
+    </div>
 
-        <?php if (count($bookings) > 0): ?>
-            <table class="booking-table">
-                <thead>
-                    <tr>
-                        <th>Departure from</th>
-                        <th>Date</th>
-                        <th>Destination</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($bookings as $booking): ?>
+    
+    <div class="user-dashboard-container">
+
+        
+        <div class="user-bookings-section">
+            <h2>My Bookings</h2>
+
+            <?php if (count($bookings) > 0): ?>
+                <table class="user-bookings-table">
+                    <thead>
                         <tr>
-                            <td><?= htmlspecialchars($booking['departure']) ?></td>
-                            <td><?= htmlspecialchars($booking['date']) ?></td>
-                            <td><?= htmlspecialchars($booking['destinationtype']) ?></td>
-                            <td>
-                                <form method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
-                                    <input type="hidden" name="cancel_booking_id" value="<?= $booking['booking_id'] ?>">
-                                    <button type="submit">Cancel</button>
-                                </form>
-                            </td>
+                            <th>Departure from</th>
+                            <th>Date</th>
+                            <th>Destination</th>
+                            <th>Action</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>You have no booked flights yet.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($bookings as $booking): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($booking['departure']) ?></td>
+                                <td><?= htmlspecialchars($booking['date']) ?></td>
+                                <td><?= htmlspecialchars($booking['destinationtype']) ?></td>
+                                <td>
+                                    <form method="post">
+                                        <input type="hidden" name="cancel_booking_id" value="<?= $booking['booking_id'] ?>">
+                                        <button type="submit">Cancel</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>You have no booked flights yet.</p>
+            <?php endif; ?>
+        </div>
 
-        <div class="support">
-            <div class="helptitle">
-                <div class="help">
-                    <p>Need assistance?</p>
-                    <a href="support-kontakt.php">Create a ticket</a>
-                </div>
+    
+        <div class="user-tickets-section">
+            <div class="user-support-create">
+                <p>Need assistance?</p>
+                <a href="support-kontakt.php">Create a ticket</a>
             </div>
 
             <h2>My Support Tickets</h2>
+
             <?php if (count($tickets) > 0): ?>
                 <?php if ($viewTicketId): ?>
                     <?php
@@ -179,16 +212,15 @@ $conn->close();
                         }
                     }
                     ?>
-
                     <?php if ($selectedTicket): ?>
-                        <div class="ticket">
+                        <div class="user-ticket-detail">
                             <h4>Ticket #<?= $selectedTicket['id'] ?> - <?= htmlspecialchars($selectedTicket['title']) ?></h4>
                             <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($selectedTicket['description'])) ?></p>
                             <p><strong>Status:</strong> <?= htmlspecialchars($selectedTicket['status']) ?> | <strong>Created:</strong> <?= $selectedTicket['created_at'] ?></p>
 
                             <h5>Comments:</h5>
                             <?php if (isset($ticketComments[$selectedTicket['id']])): ?>
-                                <ul>
+                                <ul class="user-ticket-comments">
                                     <?php foreach ($ticketComments[$selectedTicket['id']] as $comment): ?>
                                         <li><strong><?= htmlspecialchars($comment['surname'] . ' ' . $comment['lastname']) ?>:</strong> <?= nl2br(htmlspecialchars($comment['message'])) ?> <em>(<?= $comment['created_at'] ?>)</em></li>
                                     <?php endforeach; ?>
@@ -198,7 +230,7 @@ $conn->close();
                             <?php endif; ?>
 
                             <?php if ($selectedTicket['status'] === 'ongoing'): ?>
-                                <form method="post">
+                                <form method="post" class="user-ticket-reply-form">
                                     <textarea name="message" required placeholder="Reply to this ticket"></textarea>
                                     <input type="hidden" name="ticket_id" value="<?= $selectedTicket['id'] ?>">
                                     <button type="submit" name="ticket_comment_submit">Submit Reply</button>
@@ -215,7 +247,7 @@ $conn->close();
                                 </p>
                             <?php endif; ?>
 
-                            <p><a href="dashboard.php" class="back-button">← Back to tickets</a></p>
+                            <p><a href="dashboard.php" class="user-back-button">← Back to tickets</a></p>
                         </div>
                     <?php else: ?>
                         <p>Ticket not found or you do not have access.</p>
@@ -223,7 +255,7 @@ $conn->close();
                     <?php endif; ?>
                 <?php else: ?>
                     <?php foreach ($tickets as $ticket): ?>
-                        <div class="ticket">
+                        <div class="user-ticket-summary">
                             <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
                             <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
                             <a href="dashboard.php?ticket=<?= $ticket['id'] ?>">View</a>
@@ -235,7 +267,9 @@ $conn->close();
                 <p>You have not submitted any support tickets yet.</p>
             <?php endif; ?>
         </div>
+
     </div>
+
 
     <div class="footer">
         <div class="footerinfo">
@@ -257,5 +291,21 @@ $conn->close();
             <p>&copy; 2025 SkySurprise. All rights reserved.</p>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.user-ticket-summary a').forEach(link => {
+            link.addEventListener('click', function () {
+                localStorage.setItem('scrollPos', window.scrollY);
+            });
+        });
+
+        window.addEventListener('load', function () {
+            const scrollPos = localStorage.getItem('scrollPos');
+            if (scrollPos) {
+                window.scrollTo(0, parseInt(scrollPos));
+                localStorage.removeItem('scrollPos');
+            }
+        });
+    </script>
 </body>
 </html>

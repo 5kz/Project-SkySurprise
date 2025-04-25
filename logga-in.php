@@ -4,10 +4,10 @@ require_once 'func.php';
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $conn = getDbConnection(); // Use your existing function
+    $conn = getDbConnection(); 
 
     $email = htmlspecialchars($_POST['email']);
-    $password = md5($_POST['password']); // Still using md5 for now
+    $password = md5($_POST['password']); 
 
     $stmt = $conn->prepare("SELECT * FROM tbluser WHERE email = ? AND password = ?");
     $stmt->bind_param("ss", $email, $password);
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SkySurprise</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?php echo filemtime('style.css'); ?>">
 </head>
 <body>
     <div class="header">

@@ -40,12 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Your Flight - SkySurprise</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css?v=<?php echo filemtime('style.css'); ?>">
+    
 </head>
 <body class="booking-page">
 
-    <!-- Header Section (unchanged) -->
+    
     <div class="header">
         <div class="headerleft">
             <a href="dashboard.php">My journey</a>
@@ -66,18 +66,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <!-- Content Section -->
+  
     <div class="booking-content">
         <h2 class="booking-heading">Book Your Flight</h2>
 
-        <!-- Success / Error Messages -->
+    
         <?php if ($success): ?>
             <p class="booking-message booking-message-success"><?= htmlspecialchars($success) ?></p>
         <?php elseif ($error): ?>
             <p class="booking-message booking-message-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <!-- Booking Form -->
+    
         <form method="post" action="boka-resa.php" class="booking-form">
             <div class="booking-form-group">
                 <label for="departure">Departure:</label>
@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 
-    <!-- Footer Section (unchanged) -->
+
     <div class="footer">
         <div class="footerinfo">
             <div class="kortinfo">
