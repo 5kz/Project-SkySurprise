@@ -1044,21 +1044,21 @@ a {
     background: #059669;
 }
 
-/* target only the link inside the big countdown message */
+
 .countdown-box h3 a {
-    color: #1C3D5A;              /* your brand blue */
-    background: #fff;            /* white pill */
-    padding: 0.1em 0.6em;        /* a bit of breathing room */
-    border-radius: 0.4em;        /* pill shape */
-    text-decoration: none;       /* remove underline */
-    font-weight: 600;            /* stand out */
-    margin-left: 0.3em;          /* gap from preceding text */
+    color: #1C3D5A;              
+    background: #fff;            
+    padding: 0.1em 0.6em;        
+    border-radius: 0.4em;        
+    text-decoration: none;       
+    font-weight: 600;            
+    margin-left: 0.3em;          
     transition: background 0.2s ease;
     
   }
   
-  /* hover state on that same link */
+  
   .countdown-box h3 a:hover {
-    background: #FFFB;           /* slight tint on hover */
+    background: #FFFB;           
   }
   
