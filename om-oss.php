@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<?php require_once 'func.php'; ?>
+<?php require_once 'func.php'; ?> <!-- Se till att func filen finns -->
 
 <html lang="en">
 <head>
@@ -24,7 +24,7 @@
         <div class="headerright">
             <a href="main.php">Home</a>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="logga-ut.php">Log Out</a>
+                <a href="logga-ut.php">Log Out</a> <!-- Om användaren är inloggad så visas logga ut, annars logga in -->
             <?php else: ?>
                 <a href="logga-in.php">Log In</a>
             <?php endif; ?>

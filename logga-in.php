@@ -1,31 +1,34 @@
 <?php
-require_once 'func.php';
+require_once 'func.php'; // Se till att func filen finns
 
-$error_message = "";
+$error_message = ""; // Variabel för felmeddelande
 
+// Kontrollera om formuläret har skickats via POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $conn = getDbConnection(); 
+    $conn = getDbConnection(); // Tar fram databasanslutning från funktionen i func.php
 
-    $email = htmlspecialchars($_POST['email']);
-    $password = md5($_POST['password']); 
+    $email = htmlspecialchars($_POST['email']); // Säkerställer att email input är säker mot XSS
+    $password = md5($_POST['password']); // Krypterar lösenordet med MD5 
 
+    // Ta fram användarens data från databasen (email och lösenord) med sql fråga
     $stmt = $conn->prepare("SELECT * FROM tbluser WHERE email = ? AND password = ?");
-    $stmt->bind_param("ss", $email, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->bind_param("ss", $email, $password); 
+    $stmt->execute(); 
+    $result = $stmt->get_result(); // Hämtar resultatet från frågan
 
+    // Om användaren finns i databasen
     if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['email'] = $user['email'];
-        header("Location: dashboard.php");
-        exit();
+        $user = $result->fetch_assoc(); // Tar fram användarens data 
+        $_SESSION['user_id'] = $user['id']; 
+        $_SESSION['email'] = $user['email']; 
+        header("Location: dashboard.php"); // Omdirigerar till dashboard
+        exit(); // Avslutar om användningen är klar
     } else {
-        $error_message = "Invalid email or password!";
+        $error_message = "Invalid email or password!"; // Sätter felmeddelande om inloggning misslyckas
     }
 
-    $stmt->close();
-    $conn->close();
+    $stmt->close(); 
+    $conn->close(); // Stänger databasanslutning
 }
 ?>
 
@@ -45,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
         <div class="headermiddle">
             <div class="logo">
-                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt="Logo"></a>
+                <a href="main.php"><img src="bilder/skysurpriselogo.png" alt="Logo"></a> 
             </div>
         </div>
         <div class="headerright">
@@ -57,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="login-container">
             <h2>Log In</h2>
 
+            <!-- Visar felmeddelande om fel uppstår -->
             <?php if (!empty($error_message)): ?>
                 <p class="error-message"><?php echo $error_message; ?></p>
             <?php endif; ?>

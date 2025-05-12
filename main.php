@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<?php require_once 'func.php'; ?>
+<?php require_once 'func.php'; ?> <!-- Se till att func filen finns -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
                 <a href="logga-ut.php">Log Out</a>
             <?php else: ?>
                 <a href="logga-in.php">Log In</a>
-            <?php endif; ?>
+            <?php endif; ?> <!-- Om användaren är inloggad så visas logga ut, annars logga in -->
         </div>
     </div>
     <div class="middlepicture">
@@ -71,6 +71,8 @@
         </div>
     </div>
 
+
+<!-- JavaScript för boka knapp animation-->
     <script>
         var words = document.getElementsByClassName('word');
 var wordArray = [];

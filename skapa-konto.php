@@ -1,39 +1,31 @@
 <?php
 
-require_once 'func.php'; 
+require_once 'func.php'; //se till att func filen finns
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $servername = "localhost";
-    $username = "root"; 
-    $password = "";     
-    $dbname = "skysurprise";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    
+    // Hämta datan från formuläret
     $firstname = htmlspecialchars($_POST['firstname']);
     $lastname = htmlspecialchars($_POST['lastname']);
     $email = htmlspecialchars($_POST['email']);
     $password = md5($_POST['password']); 
 
-   
+    // Skapa en databasanslutning med func.php filen och skapa SQL-fråga
+    $conn = getDbConnection();  
     $sql = "INSERT INTO tbluser (surname, lastname, email, password) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssss", $firstname, $lastname, $email, $password);
 
     if ($stmt->execute()) {
-        
+        // Skicka till login sidan om registering funkar 
         header("Location: logga-in.php");
         exit();
     } else {
+        // Vid fel, visa felmeddelande
         $error_message = "Error: " . $stmt->error;
     }
 
+    // Stäng anslutningen
     $stmt->close();
     $conn->close();
 }

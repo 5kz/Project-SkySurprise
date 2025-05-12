@@ -1,11 +1,11 @@
 <?php
-
+ //saker som används överallt i projektet
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}
+} //startar sessionen 
 
 
-function getDbConnection() {
+function getDbConnection() { // Funktion för att ansluta till databasen
     $servername = "localhost";
     $username = "root"; 
     $password = "";     
@@ -20,12 +20,12 @@ function getDbConnection() {
 }
 
 
-function getUserId() {
+function getUserId() { //funktion för att hämta användarens id
     return $_SESSION['user_id'] ?? null;
 }
 
 
-function getFullName() {
+function getFullName() { //funktion för att hämta användarens namn
     $userId = getUserId();
 
     if (!$userId) return null;
@@ -48,7 +48,7 @@ function getFullName() {
     }
 }
 
-function isAdmin() {
+function isAdmin() { //funktion för att kolla om användaren är admin
     if (!isset($_SESSION['user_id'])) {
         return false;
     }
