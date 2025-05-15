@@ -594,193 +594,212 @@ body {
 
 /* ADMIN DASBOARD */
 
-   .admin-dashboard {
-    display: flex;
-    justify-content: center;
-    background-color: #f4f7fa;
-    padding: 2rem 1rem 4rem; 
-  }
-  
-  .admin-content {
-    width: 100%;
-    max-width: 1200px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding: 2.5rem;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .admin-content h2 {
-    color: #4A90E2;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-  }
-  
-  .admin-form {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin: 1rem 0 1.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .admin-form label {
-    font-weight: 500;
-  }
-  
-  .admin-form select,
-  .admin-form textarea,
-  .admin-form input[type="text"] {
-    padding: 0.6rem 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-family: inherit;
-  }
-  
-  .admin-form select {
-    cursor: pointer;
-  }
-  
-  .admin-form button {
-    background-color: #4A90E2;
-    color: #fff;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  
-  .admin-form button:hover {
-    background-color: #357ABD;
-  }
-  
-  .admin-back-button {
-    color: #4A90E2;
-    text-decoration: none;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    display: inline-block;
-  }
-  
-  .admin-back-button:hover {
-    text-decoration: underline;
-  }
-  
-  .admin-tickets h3 {
-    margin-top: 2rem;
-    color: #333;
-    font-size: 1.5rem;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
-  }
-  
-  .admin-ticket {
-    background: #FAFCFE;
-    border: 1px solid #E1E8F0;
-    border-radius: 8px;
-    padding: 1.2rem 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .admin-ticket h4 {
-    margin: 0;
-    color: #1C3D5A;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  
-  .admin-ticket p {
-    margin: 0.5rem 0;
-    font-size: 0.95rem;
-    color: #555;
-  }
-  
-  .admin-comment-list {
-    list-style: none;
-    padding-left: 0;
-    margin: 0.5rem 0 1rem;
-  }
-  
-  .admin-comment-list li {
-    padding: 0.6rem;
-    border-bottom: 1px solid #eee;
-    font-size: 0.9rem;
-  }
-  
-  .admin-comment-list strong {
-    color: #4A90E2;
-  }
-  
-  .admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  
-  .admin-table th,
-  .admin-table td {
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    text-align: left;
-    font-size: 0.95rem;
-  }
-  
-  .admin-table th {
-    background-color: #4A90E2;
-    color: #fff;
-    font-weight: 600;
-  }
-  
-  .admin-table tr:nth-child(even) td {
-    background-color: #fafafa;
-  }
-  
-  .admin-table button {
-    background-color: #E94E77;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-  
-  .admin-table button:hover {
-    background-color: #d43c5e;
-  }
-  
+.admin-dashboard {
+  display: flex;
+  justify-content: center;
+  background-color: #f4f7fa;
+  padding: 2rem 1rem 4rem;
+}
 
-  .admin-bookings h3,
-  .admin-users h3 {
-    margin-top: 2rem;
-    font-size: 1.4rem;
-    color: #333;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.4rem;
-  }
-  
-  .notification {
-    padding: 1rem;
-    border-radius: 6px;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-  }
-  
-  .notification.success {
-    background: #DFF0D8;
-    color: #3C763D;
-  }
-  
-  .notification.error {
-    background: #F2DEDE;
-    color: #A94442;
-  }
+.admin-content {
+  width: 100%;
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Headings */
+.admin-content h2,
+.admin-tickets h3,
+.admin-bookings h3,
+.admin-users h3 {
+  color: #4A90E2;
+  font-weight: 600;
+}
+
+.admin-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-tickets h3,
+.admin-bookings h3,
+.admin-users h3 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-top: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eee;
+}
+
+/* Forms */
+.admin-form {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-form label {
+  font-weight: 500;
+}
+
+.admin-form select,
+.admin-form textarea,
+.admin-form input[type="text"] {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.admin-form select {
+  cursor: pointer;
+}
+
+.admin-form button {
+  background-color: #4A90E2;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.admin-form button:hover {
+  background-color: #357ABD;
+}
+
+/* Ticket section */
+.admin-ticket {
+  background: #FAFCFE;
+  border: 1px solid #E1E8F0;
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-ticket h4 {
+  margin: 0;
+  color: #1C3D5A;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.admin-ticket p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.admin-back-button {
+  color: #4A90E2;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.admin-back-button:hover {
+  text-decoration: underline;
+}
+
+/* Comments */
+.admin-comment-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 1rem;
+}
+
+.admin-comment-list li {
+  padding: 0.6rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+
+.admin-comment-list strong {
+  color: #4A90E2;
+}
+
+/* Tables */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.admin-table th {
+  background-color: #4A90E2;
+  color: #fff;
+  font-weight: 600;
+}
+
+.admin-table tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+.admin-table button {
+  background-color: #E94E77;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}
+
+.admin-table button:hover {
+  background-color: #d43c5e;
+}
+
+/* Notifications */
+.notification {
+  padding: 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.notification.success {
+  background: #DFF0D8;
+  color: #3C763D;
+}
+
+.notification.error {
+  background: #F2DEDE;
+  color: #A94442;
+}
 
 
   /* USER DASBOARD */
 
-   .countdown-box {
+/* ===== General Typography & Resets ===== */
+body, p, table, h2, h3, h4, label, a, button {
+    line-height: 1.4;
+    font-family: 'Poppins', sans-serif;
+    color: #1C3D5A;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+
+/* ===== Countdown Banner ===== */
+.countdown-box {
     background: linear-gradient(135deg, #4A90E2, #357ABD);
     color: #fff;
     text-align: center;
@@ -791,30 +810,51 @@ body {
     max-width: 800px;
     font-family: 'Lora', serif;
 }
+
 .countdown-box h3 {
     margin: 0;
     font-size: 3rem;
     font-weight: 700;
 }
 
+.countdown-box h3 a {
+    color: #1C3D5A;
+    background: #fff;
+    padding: 0.1em 0.6em;
+    border-radius: 0.4em;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.3em;
+    transition: background 0.2s ease;
+}
 
+.countdown-box h3 a:hover {
+    background: #fffb;
+}
+
+
+/* ===== Layout Container ===== */
 .user-dashboard-container {
     max-width: 1000px;
     margin: 0 auto 4rem;
     padding: 0 1rem;
-    font-family: 'Poppins', sans-serif;
-    color: #1C3D5A;
 }
 
 
+/* ===== Section Headers ===== */
 .user-bookings-section h2,
 .user-tickets-section h2 {
     font-size: 2rem;
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    margin: 3rem 0 1rem;
     font-weight: 600;
     border-bottom: 3px solid #eee;
     padding-bottom: 0.3rem;
+}
+
+
+/* ===== Bookings Section ===== */
+.user-bookings-section {
+    margin-bottom: 4rem;
 }
 
 .user-bookings-table {
@@ -822,23 +862,27 @@ body {
     border-collapse: collapse;
     background: #fff;
     border-radius: 0.6rem;
-    overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
+
 .user-bookings-table th,
 .user-bookings-table td {
     padding: 1rem 1.2rem;
-    border-bottom: 1px solid #eee;
     font-size: 1rem;
+    border-bottom: 1px solid #eee;
 }
+
 .user-bookings-table th {
     background-color: #4A90E2;
     color: #fff;
     font-weight: 500;
 }
+
 .user-bookings-table tr:nth-child(even) td {
     background: #fafafa;
 }
+
 .user-bookings-table td button {
     background: #E94E77;
     color: #fff;
@@ -847,47 +891,40 @@ body {
     border-radius: 0.6rem;
     cursor: pointer;
     transition: background 0.3s ease;
-    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
 }
+
 .user-bookings-table td button:hover {
     background: #c0355e;
 }
 
-.user-bookings-section {
-    margin-bottom: 4rem;    /
-  }
 
+/* ===== Support Section ===== */
 .user-support-create {
     text-align: right;
     margin-bottom: 1rem;
     font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-support-create p {
     display: inline;
     margin-right: 0.5rem;
 }
+
 .user-support-create a {
     background: #4A90E2;
     color: #fff;
     padding: 0.4rem 1rem;
     border-radius: 0.6rem;
     text-decoration: none;
-    transition: background 0.3s ease;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-support-create a:hover {
     background: #357ABD;
 }
 
-p, table, h2, h3, h4, label, a, button {
-    line-height: 1.4;
-}
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+/* ===== Ticket Cards ===== */
 .user-ticket-summary,
 .user-ticket-detail {
     background: #fff;
@@ -896,57 +933,62 @@ a {
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     margin-bottom: 1.5rem;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-ticket-summary h4,
 .user-ticket-detail h4 {
     margin: 0 0 0.5rem;
     font-size: 1.3rem;
     color: #1C3D5A;
 }
+
 .user-ticket-summary p,
 .user-ticket-detail p {
     margin: 0.4rem 0;
     color: #555;
     font-size: 0.95rem;
 }
+
 .user-ticket-summary a,
 .user-back-button {
     color: #4A90E2;
-    text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-ticket-summary a:hover,
 .user-back-button:hover {
     color: #357ABD;
 }
 
 
+/* ===== Ticket Comments ===== */
 .user-ticket-comments {
     list-style: none;
     padding: 0;
     margin: 1rem 0;
 }
+
 .user-ticket-comments li {
     background: #e0f2fe;
     padding: 0.8rem;
     border-radius: 0.6rem;
     margin-bottom: 0.6rem;
     font-size: 0.95rem;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-ticket-comments strong {
     color: #4A90E2;
 }
 
+
+/* ===== Ticket Reply Form ===== */
 .user-ticket-reply-form {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
 }
+
 .user-ticket-reply-form textarea {
     width: 100%;
     padding: 1rem;
@@ -954,8 +996,8 @@ a {
     border-radius: 0.6rem;
     resize: vertical;
     min-height: 120px;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-ticket-reply-form button {
     align-self: flex-start;
     background: #10B981;
@@ -966,34 +1008,15 @@ a {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s ease;
-    font-family: 'Poppins', sans-serif;
 }
+
 .user-ticket-reply-form button:hover {
     background: #059669;
 }
 
 
-.countdown-box h3 a {
-    color: #1C3D5A;              
-    background: #fff;            
-    padding: 0.1em 0.6em;        
-    border-radius: 0.4em;        
-    text-decoration: none;       
-    font-weight: 600;            
-    margin-left: 0.3em;          
-    transition: background 0.2s ease;
-    
-  }
-  
-  
-  .countdown-box h3 a:hover {
-    background: #FFFB;           
-  }
-
-
-
   /* FÖR SKALNING AV HELA SIDAN */
-@media (max-width: 1024px) { /*Skalning för t.ex ipad eller laptops*/
+@media (max-width: 1024px) { /*Skalning för t.ex ipad eller laptops (detta händer när användarens skärm är mindre än 1024px)*/ 
     /* Header skalning */
     .header {
         flex-direction: column;
@@ -1120,8 +1143,7 @@ a {
         font-size: 1.6rem;
     }
 
-    .kontakt-formcontainer input,
-    .kontakt-formcontainer textarea {
+    .kontakt-formcontainer input,.kontakt-formcontainer textarea {
         padding: 0.9rem;
         font-size: 1.05rem;
     }
@@ -1148,9 +1170,132 @@ a {
         font-size: 1rem;
         padding: 0.9rem;
     }
-}
 
-@media (max-width: 768px) { /* Skalning för t.ex. mobiltelefoner */
+    /* Admin dashboard skalning */
+    .admin-content {
+        padding: 2rem;
+    }
+
+    .admin-content h2 {
+        font-size: 1.75rem;
+    }
+
+    .admin-form {
+        gap: 0.6rem;
+        margin: 0.8rem 0 1.2rem;
+    }
+
+    .admin-form select, .admin-form textarea,.admin-form input[type="text"] {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .admin-form button {
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .admin-tickets h3, .admin-bookings h3,.admin-users h3 {
+        font-size: 1.3rem;
+    }
+
+    .admin-ticket {
+        padding: 1rem 1.2rem;
+    }
+
+    .admin-ticket h4 {
+        font-size: 1.1rem;
+    }
+
+    .admin-ticket p {
+        font-size: 0.9rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .admin-table button {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .notification {
+        font-size: 0.95rem;
+        padding: 0.9rem;
+    }
+  
+        .user-dashboard-container {
+        padding: 0 1.2rem;
+    }
+
+
+    .countdown-box {
+        padding: 2.5rem 1rem;
+    }
+
+    .countdown-box h3 {
+        font-size: 2.4rem;
+    }
+
+    
+    .user-bookings-section h2, .user-tickets-section h2 {
+        font-size: 1.6rem;
+        margin-top: 2rem;
+        margin-bottom: 0.8rem;
+    }
+
+
+    .user-bookings-table th, .user-bookings-table td {
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .user-bookings-table td button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    
+    .user-support-create a {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    
+    .user-ticket-summary, .user-ticket-detail {
+        padding: 1.2rem;
+    }
+
+    .user-ticket-summary h4, .user-ticket-detail h4 {
+        font-size: 1.1rem;
+    }
+
+    .user-ticket-summary p, .user-ticket-detail p {
+        font-size: 0.9rem;
+    }
+
+    
+    .user-ticket-reply-form textarea {
+        padding: 0.8rem;
+        min-height: 100px;
+    }
+
+    .user-ticket-reply-form button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+    }
+
+    
+    .user-ticket-comments li {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+    }
+
+@media (max-width: 768px) { /* Skalning för t.ex. mobiltelefoner  (detta händer när användarens skärm är mindre än 768px)*/
     /* Header scale mindre */
 
     .header {
@@ -1325,4 +1470,181 @@ a {
         padding: 0.9rem 1rem;
     }
 
-}
+    /* Admin dashboard skalning mindre */
+    .admin-content {
+    padding: 1.2rem;
+    }
+
+    .admin-content h2 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .admin-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .admin-form label {
+        font-size: 0.95rem;
+    }
+
+    .admin-form select,
+    .admin-form textarea,
+    .admin-form input[type="text"] {
+        font-size: 0.9rem;
+        width: 100%;
+    }
+
+    .admin-form button {
+        width: 100%;
+        font-size: 0.95rem;
+        padding: 0.6rem;
+    }
+
+    .admin-tickets h3,
+    .admin-bookings h3,
+    .admin-users h3 {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .admin-ticket {
+        padding: 1rem;
+    }
+
+    .admin-ticket h4 {
+        font-size: 1rem;
+    }
+
+    .admin-ticket p {
+        font-size: 0.85rem;
+    }
+
+    .admin-back-button {
+        display: block;
+        margin-top: 1rem;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    .admin-comment-list li {
+        font-size: 0.85rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    .admin-table {
+        font-size: 0.85rem;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .admin-table button {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .notification {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+    }
+
+        /* User dashboard skalning mindre */
+        .countdown-box {
+        padding: 2rem 1rem;
+        margin: 1.5rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .countdown-box h3 {
+        font-size: 2rem;
+        line-height: 1.3;
+    }
+
+    .countdown-box h3 a {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    
+    .user-dashboard-container {
+        padding: 0 1rem;
+    }
+
+    
+    .user-bookings-section h2, .user-tickets-section h2 {
+        font-size: 1.4rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.6rem;
+    }
+
+    
+    .user-bookings-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .user-bookings-table th, .user-bookings-table td {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.9rem;
+    }
+
+    .user-bookings-table td button {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.85rem;
+    }
+
+
+    .user-support-create {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .user-support-create a {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .user-ticket-summary, .user-ticket-detail {
+        padding: 1rem;
+    }
+
+    .user-ticket-summary h4,
+    .user-ticket-detail h4 {
+        font-size: 1rem;
+    }
+
+    .user-ticket-summary p, .user-ticket-detail p {
+        font-size: 0.85rem;
+    }
+
+    
+    .user-ticket-comments li {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    
+    .user-ticket-reply-form textarea {
+        padding: 0.7rem;
+        min-height: 90px;
+        font-size: 0.9rem;
+    }
+
+    .user-ticket-reply-form button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    }
