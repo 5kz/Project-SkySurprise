@@ -1,39 +1,39 @@
 <?php
 
-require_once 'func.php';
+require_once 'func.php'; // Se tilll att func.php finns
 
 
 if (!getUserId()) {
-    header("Location: logga-in.php");
+    header("Location: logga-in.php"); // Om användaren inte är inloggad skicka till logga-in sidan
     exit();
 }
 
 
-$success = false;
+$success = false; // Skapa variabel
 $error = false;
 
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") { // Kolla om formuläret har skickats via POST
     
-    $conn = getDbConnection();
+    $conn = getDbConnection(); // Använd func filens funktion för att skapa databasanslutning
 
-    
-    $userId = getUserId();
-    $title = trim($_POST["title"]);
+    //Information från formuläret
+    $userId = getUserId(); // Hämta användare id med hjälp av funktionen i func.php
+    $title = trim($_POST["title"]); 
     $description = trim($_POST["description"]);
     $image = null;
 
-    
+    // Hanreting av bilduppladdning
     if (isset($_FILES["image"]) && $_FILES["image"]["error"] === UPLOAD_ERR_OK) {
         
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // TIllåta dessa filtyper
         $fileType = $_FILES["image"]["type"];
         $fileTmpName = $_FILES["image"]["tmp_name"];
         $fileName = basename($_FILES["image"]["name"]);
 
-        
+        // Kolla om filen är av tillåten typ
         if (in_array($fileType, $allowedTypes)) {
-            
+            // Skapa upplysningsmapp om den inte finns samt ge alla bilder ett unikt namn
             $uploadDir = "uploads/";
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
@@ -41,19 +41,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             $targetPath = $uploadDir . time() . "_" . $fileName;
             
-            if (move_uploaded_file($fileTmpName, $targetPath)) {
-                $image = $targetPath; 
+            if (move_uploaded_file($fileTmpName, $targetPath)) { // Flytta filen till den nya rätta mappen
+                $image = $targetPath; // När sökvägen är fixad kan den användas till senare
             }
         }
     }
 
     
-    if (!empty($title) && !empty($description)) {
-        
+    if (!empty($title) && !empty($description)) { // Kolla så att titeln och beskrivningen inte är tomma
+        // Förbereda SQL-fråga för att sätta in data i databasen
         $stmt = $conn->prepare("INSERT INTO ticketinfo (user_id, title, description, image, status) VALUES (?, ?, ?, ?, 'open')");
         $stmt->bind_param("isss", $userId, $title, $description, $image);
 
-       
+       // Om det funkar så sätt success till true annars sätt error till true
         if ($stmt->execute()) {
             $success = true; 
         } else {
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->close();
         $conn->close();
     } else {
-        
+        // Om titeln eller beskrivningen är tom, sätt error till true
         $error = true;
     }
 }
@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="headerright">
         <a href="main.php">Home</a>
         <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="logga-ut.php">Log Out</a>
+            <a href="logga-ut.php">Log Out</a> <!-- Visa logga in / logg ut beronende på om användern är inloggad eller ej -->
         <?php else: ?>
             <a href="logga-in.php">Log In</a>
         <?php endif; ?>
@@ -103,11 +103,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <div class="kontakt-formcontainer">
     <h2>Submit a Support Ticket</h2>
-
-  
-    <?php if ($success): ?>
+    <?php if ($success): ?> <!-- Om det funkar -->
         <p class="success">Your ticket has been submitted successfully.</p>
-    <?php elseif ($error): ?>
+    <?php elseif ($error): ?> <!-- Om det inte funkar -->
         <p class="error">There was a problem submitting your ticket. Make sure all fields are filled in.</p>
     <?php endif; ?>
 

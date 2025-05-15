@@ -1,38 +1,52 @@
 <?php
-require_once 'func.php';
+require_once 'func.php'; // Se till att func.php finns
 
+// Kontrollera om användaren är inloggad, annars omdirigera till inloggningssidan
 if (!getUserId()) {
     header("Location: logga-in.php");
     exit();
 }
 
+// Skapa variabler 
 $success = '';
 $error = '';
 
+// Kontrollera om formuläret skickats med POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Hämta och "rena" så att den inte kan skada med SQL-injektion
     $departure = filter_input(INPUT_POST, 'departure', FILTER_SANITIZE_STRING);
     $destinationtype = filter_input(INPUT_POST, 'destinationtype', FILTER_SANITIZE_STRING);
     $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
-    $userid = getUserId();
+    $userid = getUserId(); // Hämtar den aktuella användarens ID från sessionen med func filen
 
+    // Kontrollera att alla fält har fyllts i
     if (!empty($departure) && !empty($destinationtype) && !empty($date)) {
+        
+        // Etablera databasanslutning med hjälp av funktionen i func.php
         $conn = getDbConnection();
+
+        // Förbered en SQL-sats 
         $stmt = $conn->prepare("INSERT INTO bookinginfo (departure, date, destinationtype, userid) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("sssi", $departure, $date, $destinationtype, $userid);
 
+        // försök att köra SQL-satsen
         if ($stmt->execute()) {
-            $success = "Your flight has been successfully booked!";
+            $success = "Your flight has been successfully booked!"; // Om lyckad
         } else {
-            $error = "An error occurred while booking: " . $conn->error;
+            $error = "An error occurred while booking: " . $conn->error; // Om fel
         }
 
+        // Stäng 
         $stmt->close();
         $conn->close();
     } else {
+        // Meddela användaren om något fält saknas
         $error = "All fields must be filled out.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
