@@ -1,34 +1,45 @@
 <?php
-require_once 'func.php';
 
+require_once 'func.php'; // Se till att func.php finns
+
+// Om användaren är admin, skicka till admin-dashboard
 if (isAdmin()) {
     header("Location: admin-dashboard.php");
     exit();
 }
+
+// Om ej inloggad, skicka till inloggningssidan
 if (!getUserId()) {
     header("Location: logga-in.php");
     exit();
 }
 
+// Ansluter till databasen och hämtar användar-ID från sessionen.
 $conn = getDbConnection();
 $userId = getUserId();
 
-
+// === AVBOKNING AV RESA ===
+// Om användaren har skickat ett formulär för att avboka et flyg
 if (isset($_POST['cancel_booking_id'])) {
-    $cancelId = intval($_POST['cancel_booking_id']);
+    $cancelId = intval($_POST['cancel_booking_id']); // Saniterar input
+
+    // Förbereder SQL-fråga för att ta bort bokningen,bara om den tillhör användaren.
     $stmt = $conn->prepare("DELETE FROM bookinginfo WHERE id = ? AND userid = ?");
     $stmt->bind_param("ii", $cancelId, $userId);
     $stmt->execute();
     $stmt->close();
+
+    // Omdirigerar tillbaka till dashboard efter borttagning
     header("Location: dashboard.php");
     exit();
 }
 
-
+// === SKICKA KOMMENTAR PÅ TICKET ===
 if (isset($_POST['ticket_comment_submit'])) {
     $ticketId = intval($_POST['ticket_id']);
-    $message = trim($_POST['message']);
+    $message = trim($_POST['message']); // Saniterar meddelandet samt sparar det i variabeln
 
+    // Hämtar status på det aktuella ärendet (ticket) för att kontrollera att det är öppet ("ongoing") annars kan inte kommentera
     $stmt = $conn->prepare("SELECT status FROM ticketinfo WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $ticketId, $userId);
     $stmt->execute();
@@ -36,6 +47,7 @@ if (isset($_POST['ticket_comment_submit'])) {
     $ticket = $result->fetch_assoc();
     $stmt->close();
 
+    // Om ärendet finns, är öppet och meddelandet inte är tomt – lägg till kommentaren som användaren skickade
     if ($ticket && $ticket['status'] === 'ongoing' && !empty($message)) {
         $stmt = $conn->prepare("INSERT INTO ticketcomments (ticket_id, user_id, message) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $ticketId, $userId, $message);
@@ -43,11 +55,13 @@ if (isset($_POST['ticket_comment_submit'])) {
         $stmt->close();
     }
 
+    // Omdirigera tillbaka till dashboard
     header("Location: dashboard.php");
     exit();
 }
 
-
+// === HÄMTA ANVÄNDARENS BOKNINGAR ===
+// Hämtar bokningsdata för den aktuella användaren
 $stmt = $conn->prepare("SELECT b.id AS booking_id, b.departure, b.date, b.destinationtype, u.surname, u.lastname 
                         FROM bookinginfo b 
                         JOIN tbluser u ON b.userid = u.id 
@@ -63,13 +77,14 @@ while ($row = $bookingsResult->fetch_assoc()) {
 }
 $stmt->close();
 
-
+// === RÄKNA DAGAR TILL NÄSTA RESA ===
 $daysLeftMessage = 'No upcoming flights. <br> <a href="boka-resa.php">Book one now!</a>';
 $now = new DateTime();
-
 $soonest = null;
+
 foreach ($bookings as $booking) {
     $flightDate = new DateTime($booking['date']);
+    // Hittar närmaste flyg
     if ($flightDate >= $now && (!$soonest || $flightDate < $soonest)) {
         $soonest = $flightDate;
     }
@@ -79,17 +94,18 @@ if ($soonest) {
     $interval = $now->diff($soonest);
     $daysLeft = $interval->format('%a');
 
+    // Skapa meddelande baserat på hur många dagar som är kvar
     if ($daysLeft == 0) {
         $daysLeftMessage = "Your next flight is <strong>today</strong>!";
-    } 
-    else {
+    } else {
         $daysLeftMessage = "<strong>$daysLeft days</strong> left until your adventure!";
     }
 }
 
+// === HÄMTA ANVÄNDARENS TICKET/ÄRENDEN ===
 $viewTicketId = isset($_GET['ticket']) ? intval($_GET['ticket']) : null;
 
-
+// Hämtar användarens tickets (ärenden)
 $stmt = $conn->prepare("SELECT id, title, description, status, created_at, image FROM ticketinfo WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
@@ -101,11 +117,16 @@ while ($row = $ticketsResult->fetch_assoc()) {
 }
 $stmt->close();
 
-
+// === HÄMTA KOMMENTARER FÖR VARJE TICKET ===
 $ticketComments = [];
 foreach ($tickets as $ticket) {
     $ticketId = $ticket['id'];
-    $stmt = $conn->prepare("SELECT c.*, u.surname, u.lastname FROM ticketcomments c JOIN tbluser u ON c.user_id = u.id WHERE c.ticket_id = ? ORDER BY c.created_at ASC");
+
+    $stmt = $conn->prepare("SELECT c.*, u.surname, u.lastname  
+                            FROM ticketcomments c 
+                            JOIN tbluser u ON c.user_id = u.id 
+                            WHERE c.ticket_id = ? 
+                            ORDER BY c.created_at ASC"); //Hämtar kommentarerna från databasen
     $stmt->bind_param("i", $ticketId);
     $stmt->execute();
     $commentsResult = $stmt->get_result();
@@ -116,6 +137,7 @@ foreach ($tickets as $ticket) {
     $stmt->close();
 }
 
+// Stänger databasanslutningen
 $conn->close();
 ?>
 
@@ -142,8 +164,8 @@ $conn->close();
         <div class="headerright">
             <a href="main.php">Home</a>
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="logga-ut.php">Log Out</a>
-            <?php else: ?>
+                <a href="logga-ut.php">Log Out</a> 
+            <?php else: ?> <!-- Om användaren är inloggad så visas logga ut, annars logga in -->
                 <a href="logga-in.php">Log In</a>
             <?php endif; ?>
         </div>
@@ -188,7 +210,7 @@ $conn->close();
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>You have no booked flights yet.</p>
+                <p>You have no booked flights yet.</p> <!-- Om användaren inte har några bokningar -->
             <?php endif; ?>
         </div>
 
@@ -204,7 +226,7 @@ $conn->close();
             <?php if (count($tickets) > 0): ?>
                 <?php if ($viewTicketId): ?>
                     <?php
-                    $selectedTicket = null;
+                    $selectedTicket = null; // För att hålla reda på vilken ticket som ska visas
                     foreach ($tickets as $t) {
                         if ($t['id'] == $viewTicketId) {
                             $selectedTicket = $t;
@@ -214,7 +236,7 @@ $conn->close();
                     ?>
                     <?php if ($selectedTicket): ?>
                         <div class="user-ticket-detail">
-                            <h4>Ticket #<?= $selectedTicket['id'] ?> - <?= htmlspecialchars($selectedTicket['title']) ?></h4>
+                            <h4>Ticket #<?= $selectedTicket['id'] ?> - <?= htmlspecialchars($selectedTicket['title']) ?></h4> <!-- Visar ticket-id och titel samt sanerar -->
                             <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($selectedTicket['description'])) ?></p>
                             <p><strong>Status:</strong> <?= htmlspecialchars($selectedTicket['status']) ?> | <strong>Created:</strong> <?= $selectedTicket['created_at'] ?></p>
 
@@ -231,7 +253,7 @@ $conn->close();
 
                             <?php if ($selectedTicket['status'] === 'ongoing'): ?>
                                 <form method="post" class="user-ticket-reply-form">
-                                    <textarea name="message" required placeholder="Reply to this ticket"></textarea>
+                                    <textarea name="message" required placeholder="Reply to this ticket"></textarea> <!-- Textarea för att skriva meddelande -->
                                     <input type="hidden" name="ticket_id" value="<?= $selectedTicket['id'] ?>">
                                     <button type="submit" name="ticket_comment_submit">Submit Reply</button>
                                 </form>
@@ -239,7 +261,7 @@ $conn->close();
                                 <p>You cannot comment on this ticket because it is not in 'Ongoing' status.</p>
                             <?php endif; ?>
 
-                            <?php if (!empty($selectedTicket['image'])): ?>
+                            <?php if (!empty($selectedTicket['image'])): ?> <!-- Om det finns en bild bifogad till ticket -->
                                 <p><strong>Attached File:</strong><br>
                                     <a href="uploads/<?= htmlspecialchars($selectedTicket['image']) ?>" download>
                                         <?= htmlspecialchars($selectedTicket['image']) ?>
@@ -251,19 +273,19 @@ $conn->close();
                         </div>
                     <?php else: ?>
                         <p>Ticket not found or you do not have access.</p>
-                        <p><a href="dashboard.php">← Back to tickets</a></p>
+                        <p><a href="dashboard.php">← Back to tickets</a></p> <!-- Om ticket inte hittas (felhantering-->
                     <?php endif; ?>
                 <?php else: ?>
                     <?php foreach ($tickets as $ticket): ?>
                         <div class="user-ticket-summary">
-                            <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4>
+                            <h4>Ticket #<?= $ticket['id'] ?> - <?= htmlspecialchars($ticket['title']) ?></h4> 
                             <p><strong>Status:</strong> <?= htmlspecialchars($ticket['status']) ?> | <strong>Created:</strong> <?= $ticket['created_at'] ?></p>
                             <a href="dashboard.php?ticket=<?= $ticket['id'] ?>">View</a>
                         </div>
                         <hr>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            <?php else: ?>
+            <?php else: ?> <!-- Om användaren inte har några tickets -->
                 <p>You have not submitted any support tickets yet.</p>
             <?php endif; ?>
         </div>
@@ -293,6 +315,7 @@ $conn->close();
     </div>
 
     <script>
+        // Spara scrollposition när användaren klickar på en länk i ticket-sektionen
         document.querySelectorAll('.user-ticket-summary a').forEach(link => {
             link.addEventListener('click', function () {
                 localStorage.setItem('scrollPos', window.scrollY);
